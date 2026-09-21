@@ -13,7 +13,9 @@
     "nominal_pipe_size": 1.5,
     "pipe_outside_diameter": 1.9,
     "pipe_wall": 0.145,
-    "generic_fitting_hub_od": 2.5
+    "generic_fitting_hub_od": 2.5,
+    "stock_length_ft": 10.0,
+    "cut_kerf": 0.125
   },
   "counts": {
     "short_pipes": 56,
@@ -40,7 +42,10 @@
     "render_count": 4,
     "glb_exported": true,
     "assembly_instructions_generated": true,
-    "connector_map_generated": true
+    "connector_map_generated": true,
+    "shopping_list_generated": true,
+    "cut_plan_generated": true,
+    "design_manifest_generated": true
   },
   "limitations": [
     "Generic fitting envelopes are used because no manufacturer/SKU was supplied.",

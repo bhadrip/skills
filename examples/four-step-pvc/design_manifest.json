@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "generator": "golu-padi-designer/scripts/build_golu_padi.py",
+  "requirements": {
+    "steps": 4,
+    "dimension_mode": "cut",
+    "short_input_in": 12.0,
+    "long_input_in": 36.0,
+    "boards_enabled": true
+  },
+  "pipe": {
+    "nominal_size_in": 1.5,
+    "outside_diameter_in": 1.9,
+    "wall_in": 0.145,
+    "socket_stop_offset_in": 1.0
+  },
+  "derived_dimensions_in": {
+    "short_cut": 12.0,
+    "long_cut": 36.0,
+    "short_pitch": 14.0,
+    "long_pitch": 38.0,
+    "bounding_box_xyz": [
+      58.56,
+      40.56,
+      59.41
+    ]
+  },
+  "procurement": {
+    "stock_length_ft": 10.0,
+    "cut_kerf_in": 0.125,
+    "stock_pieces_required": 13
+  }
+}

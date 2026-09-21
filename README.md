@@ -4,13 +4,16 @@ Public Codex skills maintained by [bhadrip](https://github.com/bhadrip).
 
 ## Golu Padi Designer
 
-`golu-padi-designer` creates connector-aware, dimensioned PVC Golu/Kolu display steps in Blender. It generates:
+`golu-padi-designer` has two capabilities: create or edit a connector-aware Blender design, and plan the physical build. It generates:
 
 - an editable Blender file;
 - a portable GLB;
 - a connector-aware bill of materials;
 - tailored, level-by-level assembly instructions;
 - an exact connector orientation map;
+- a stock-pipe shopping list and optimized cut plan;
+- a reusable design manifest for later edits;
+- a complete tools list, including the correct PVC cutter capacity;
 - four inspection renders;
 - dimensional QA and export re-import validation.
 

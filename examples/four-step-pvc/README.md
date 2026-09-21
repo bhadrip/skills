@@ -21,6 +21,9 @@ The distinction matters: a 12-inch cut tube inserted into two fittings does not 
 - `bom.csv` — modeled bill of materials
 - `assembly_instructions.md` — generated level-by-level build sequence
 - `connector_map.csv` — fitting port orientation at every labeled node
+- `shopping_list.md` — PVC stock, fittings, boards, tools, and safety supplies
+- `cut_plan.csv` — optimized cuts from 10-foot stock with kerf allowance
+- `design_manifest.json` — reusable parameters for later Blender edits
 - `qa_report.json` — dimensional and object-count checks
 - `reopen_validation.json` — saved Blend reopen and GLB re-import checks
 - `renders/` — perspective, side, front, and rear three-quarter inspection views

@@ -18,6 +18,9 @@
   },
   "assembly_artifacts": {
     "instructions_exist": true,
-    "connector_map_exists": true
+    "connector_map_exists": true,
+    "shopping_list_exists": true,
+    "cut_plan_exists": true,
+    "design_manifest_exists": true
   }
 }

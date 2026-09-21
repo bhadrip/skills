@@ -21,6 +21,18 @@ These instructions are generated from the same node graph as the Blender model a
 - **12** generic multi-axis **5-port** fittings
 - **4** removable tread boards at **40 × 13.25 × 0.75 in**
 
+## Tools needed
+
+- Ratcheting PVC cutter rated for at least **1.9 in outside diameter**, or a fine-tooth saw with a miter box
+- Deburring/chamfering tool or flat and round files
+- Tape measure, permanent marker, and masking tape for labels
+- Framing square or large carpenter's square
+- Spirit level
+- Rubber mallet and scrap-wood tapping block
+- Safety glasses and work gloves
+- Clamps or a helper for holding the two side frames during width-member installation
+- Optional manufacturer-approved primer/cement only if the chosen fittings are intended to be permanently bonded
+
 ## Labeling system
 
 - Mark depth stations **D0** at the front through **D4** at the rear.

@@ -21,6 +21,9 @@ GLB_PATH = os.path.join(ROOT, STEM + ".glb")
 OUT_PATH = os.path.join(ROOT, "reopen_validation.json")
 ASSEMBLY_PATH = os.path.join(ROOT, "assembly_instructions.md")
 CONNECTOR_MAP_PATH = os.path.join(ROOT, "connector_map.csv")
+SHOPPING_PATH = os.path.join(ROOT, "shopping_list.md")
+CUT_PLAN_PATH = os.path.join(ROOT, "cut_plan.csv")
+MANIFEST_PATH = os.path.join(ROOT, "design_manifest.json")
 INCH = 0.0254
 
 
@@ -60,6 +63,9 @@ checks_pass = (
     and bool(glb_meshes)
     and os.path.exists(ASSEMBLY_PATH)
     and os.path.exists(CONNECTOR_MAP_PATH)
+    and os.path.exists(SHOPPING_PATH)
+    and os.path.exists(CUT_PLAN_PATH)
+    and os.path.exists(MANIFEST_PATH)
 )
 result = {
     "status": "PASS" if checks_pass else "FAIL",
@@ -71,6 +77,9 @@ result = {
     "assembly_artifacts": {
         "instructions_exist": os.path.exists(ASSEMBLY_PATH),
         "connector_map_exists": os.path.exists(CONNECTOR_MAP_PATH),
+        "shopping_list_exists": os.path.exists(SHOPPING_PATH),
+        "cut_plan_exists": os.path.exists(CUT_PLAN_PATH),
+        "design_manifest_exists": os.path.exists(MANIFEST_PATH),
     },
 }
 with open(OUT_PATH, "w", encoding="utf-8") as handle:

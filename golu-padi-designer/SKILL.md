@@ -1,33 +1,21 @@
 ---
 name: golu-padi-designer
-description: Design dimensioned modular Golu/Kolu/Bommai Golu display steps from PVC pipe, generate an editable Blender model, connector-aware BOM, tailored step-by-step assembly instructions, inspection renders, and GLB export. Use when users want to plan, visualize, resize, assemble, or validate a stepped PVC festival display; do not present the result as structural certification.
+description: Create or edit PVC Golu/Kolu/Bommai Golu step designs in Blender, or plan a build with a shopping list, optimized pipe cut plan, connector map, required tools, and tailored assembly instructions. Use for visual design changes and practical purchase/assembly planning; do not present the result as structural certification.
 ---
 
 # Golu Padi Designer
 
-Create a buildable-looking, dimensionally explicit PVC step display while keeping tube cut lengths distinct from assembled spacing.
+Support exactly two capabilities. Use either one independently or both from the same design manifest.
 
-## Before building
+## Capability 1 — Create or edit the Blender design
 
-Resolve or reasonably infer:
+Use this mode when the user wants a new 3D design, changes to an existing Golu model, different step count or width, different boards/materials, or revised inspection renders.
 
-- number of steps;
-- whether the supplied short/long dimensions are **tube cut lengths** or **assembled center-to-center pitches**;
-- PVC nominal size, outside diameter, and wall thickness;
-- fitting center-to-socket-stop distance;
-- whether removable tread boards are wanted.
+Read [references/blender-editing.md](references/blender-editing.md) before editing an existing `.blend` or generated design.
 
-Interpret requests such as “3 padi, 3 ft wide” or “5 padi, 5 ft wide” as the number of levels plus an assembled center-to-center frame width unless the user explicitly means overall envelope, board width, or tube cut length. Convert feet to inches and use `--dimension-mode pitch`. If the user says “use 3 ft pipes,” use cut mode instead. Always report the resulting overall bounding-box width so the assumption is visible.
+For a new or dimensionally changed design, run Blender with the deterministic generator:
 
-If the user intends physical fabrication and has not selected a fitting manufacturer/SKU, use clearly labeled generic fitting dimensions. State that the socket allowance must be replaced with measured SKU data before cutting. Never claim structural or load certification.
-
-Read [references/dimensional-model.md](references/dimensional-model.md) when converting between cut lengths and assembled dimensions or reviewing connector requirements.
-
-## Generate the model
-
-Use Blender in background mode with `scripts/build_golu_padi.py`. The script accepts arguments after `--`:
-
-```sh
+```shell
 blender --background --python scripts/build_golu_padi.py -- \
   --output-dir /absolute/path/to/output \
   --steps 4 \
@@ -37,27 +25,40 @@ blender --background --python scripts/build_golu_padi.py -- \
   --socket-stop-offset 1
 ```
 
-Use `--dimension-mode pitch` when the user's dimensions describe assembled center spacing. Add `--no-boards` only when the user wants a pipe-only frame. Run `--help` through Blender for all pipe geometry options.
+For edits to a generated design, read its `design_manifest.json`, preserve the source, change only the requested parameters, and rebuild into a new versioned output directory. Use direct Blender edits for appearance or one-off geometry changes that are not represented by generator parameters; keep those edits in a new `.blend` and rerender all inspection views.
 
 The generated structure must route fittings from the actual incident pipe directions. Do not substitute planar crosses or tees at nodes that require ports on multiple axes.
 
-## Validate and inspect
+## Capability 2 — Plan purchases and assembly
 
-The generator writes an editable `.blend`, `.glb`, BOM, QA JSON, four canonical renders, `assembly_instructions.md`, and `connector_map.csv`. The assembly guide must be derived from the generated node graph and must include level-specific counts rather than generic prose. Inspect the perspective, side, front, and rear three-quarter renders before delivery.
+Use this mode when the user wants help deciding dimensions, planning what to buy, calculating pipe stock and cuts, identifying tools, or following build instructions.
 
-Reopen the saved Blend and re-import the GLB:
+Read [references/procurement-and-assembly.md](references/procurement-and-assembly.md). Resolve or reasonably infer the step count, width meaning, rise/run, PVC size, fitting socket allowance, tread boards, purchasable stock length, and saw/cutter kerf.
 
-```sh
-blender --background /absolute/path/to/output/golu_padi_4step.blend \
-  --python scripts/verify_exports.py -- \
-  --output-dir /absolute/path/to/output --steps 4
-```
+The generated plan must include:
 
-Treat a successful command as incomplete until `qa_report.json` and `reopen_validation.json` both report `PASS`, the instructions match the requested padi count and width semantics, and the renders show every board, pipe, and fitting at the intended node.
+- `shopping_list.md` with PVC stock, fittings, boards, retention/safety supplies, and tools such as a correctly sized PVC cutter;
+- `cut_plan.csv` packing the required cuts into the chosen stock length with kerf allowance;
+- `bom.csv`, `connector_map.csv`, and level-specific `assembly_instructions.md`;
+- explicit assumptions and manufacturer/SKU checks.
+
+Only add current prices when the user requests pricing and provides or allows a location/vendor search. Keep price estimates separate from geometric quantities.
+
+## Shared dimensional rules
+
+Read [references/dimensional-model.md](references/dimensional-model.md) whenever converting between tube cuts, assembled center pitches, board width, or overall envelope.
+
+Interpret “3 padi, 3 ft wide” or “5 padi, 5 ft wide” as an assembled center-to-center frame width unless the user explicitly means overall envelope, board width, or tube cut length. If the user says “use 3 ft pipes,” use cut mode. Always report both the interpretation and resulting overall bounding box.
+
+If no fitting SKU is supplied, use clearly labeled generic dimensions and state that its socket allowance must be replaced with measured manufacturer data before cutting. Never claim structural, load, seismic, or child-safety certification.
+
+## Validate both modes
+
+Inspect all canonical renders. Reopen the saved `.blend`, re-import the GLB with `scripts/verify_exports.py`, and require both QA JSON files to report `PASS`. Confirm the design manifest, BOM, shopping list, cut plan, connector map, and assembly instructions agree on dimensions and quantities.
 
 ## Deliver
 
-Provide the `.blend`, GLB, BOM, assembly instructions, connector map, QA files, and at least the perspective render. Summarize:
+For Blender work, provide the edited `.blend`, GLB, and inspection renders. For planning work, provide the manifest, shopping list, cut plan, BOM, tools list, connector map, and assembly instructions. When both capabilities are used, deliver the complete set and summarize:
 
 - cut lengths and assembled pitches;
 - pipe and connector counts;

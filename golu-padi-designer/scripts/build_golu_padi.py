@@ -24,6 +24,10 @@ def blender_args():
     parser.add_argument("--pipe-od", type=float, default=1.900)
     parser.add_argument("--pipe-wall", type=float, default=0.145)
     parser.add_argument("--nominal-pipe-size", type=float, default=1.5)
+    parser.add_argument("--stock-length-ft", type=float, default=10.0,
+                        help="Purchased straight-pipe stock length used for cut planning")
+    parser.add_argument("--cut-kerf-in", type=float, default=0.125,
+                        help="Conservative material allowance per cut")
     parser.add_argument("--no-boards", action="store_true")
     args = parser.parse_args(argv)
     if not 1 <= args.steps <= 12:
@@ -34,6 +38,8 @@ def blender_args():
         parser.error("assembled pitch must exceed twice the socket-stop offset")
     if args.pipe_wall <= 0 or args.pipe_od <= 2 * args.pipe_wall:
         parser.error("pipe OD must exceed twice the wall thickness")
+    if args.stock_length_ft <= 0 or args.cut_kerf_in < 0:
+        parser.error("stock length must be positive and cut kerf non-negative")
     return args
 
 
@@ -47,6 +53,9 @@ REPORT_PATH = os.path.join(ROOT, "qa_report.json")
 BOM_PATH = os.path.join(ROOT, "bom.csv")
 ASSEMBLY_PATH = os.path.join(ROOT, "assembly_instructions.md")
 CONNECTOR_MAP_PATH = os.path.join(ROOT, "connector_map.csv")
+SHOPPING_PATH = os.path.join(ROOT, "shopping_list.md")
+CUT_PLAN_PATH = os.path.join(ROOT, "cut_plan.csv")
+MANIFEST_PATH = os.path.join(ROOT, "design_manifest.json")
 os.makedirs(RENDER_DIR, exist_ok=True)
 
 # All modeled lengths are SI internally. Inch values are the user-facing source of truth.
@@ -87,6 +96,8 @@ LIP_WIDTH = FITTING_LIP_WIDTH_IN * INCH
 SHORT_PITCH = SHORT_PITCH_IN * INCH
 LONG_PITCH = LONG_PITCH_IN * INCH
 SOCKET_STOP_OFFSET = SOCKET_STOP_OFFSET_IN * INCH
+STOCK_LENGTH_IN = ARGS.stock_length_ft * 12.0
+CUT_KERF_IN = ARGS.cut_kerf_in
 
 BOARD_THICKNESS_IN = 0.75
 BOARD_DEPTH_IN = SHORT_PITCH_IN - 0.75
@@ -416,6 +427,18 @@ def write_assembly_artifacts(incidents, ys, connector_counts, pipe_axis_counts, 
         )
     lines.extend([
         "",
+        "## Tools needed",
+        "",
+        f"- Ratcheting PVC cutter rated for at least **{format_inches(PIPE_OD_IN)} in outside diameter**, or a fine-tooth saw with a miter box",
+        "- Deburring/chamfering tool or flat and round files",
+        "- Tape measure, permanent marker, and masking tape for labels",
+        "- Framing square or large carpenter's square",
+        "- Spirit level",
+        "- Rubber mallet and scrap-wood tapping block",
+        "- Safety glasses and work gloves",
+        "- Clamps or a helper for holding the two side frames during width-member installation",
+        "- Optional manufacturer-approved primer/cement only if the chosen fittings are intended to be permanently bonded",
+        "",
         "## Labeling system",
         "",
         f"- Mark depth stations **D0** at the front through **D{STEPS}** at the rear.",
@@ -479,6 +502,140 @@ def write_assembly_artifacts(incidents, ys, connector_counts, pipe_axis_counts, 
     ])
     with open(ASSEMBLY_PATH, "w", encoding="utf-8") as handle:
         handle.write("\n".join(lines))
+
+
+def plan_stock_cuts(pipe_axis_counts):
+    width_count = pipe_axis_counts["Y"]
+    short_count = pipe_axis_counts["X"] + pipe_axis_counts["Z"]
+    width_consumed = LONG_CUT_IN + CUT_KERF_IN
+    short_consumed = SHORT_CUT_IN + CUT_KERF_IN
+    if max(width_consumed, short_consumed) > STOCK_LENGTH_IN + 1e-9:
+        raise RuntimeError(
+            f"Longest cut plus kerf exceeds "
+            f"stock length ({STOCK_LENGTH_IN:.3f} in)"
+        )
+
+    patterns = []
+    for width_pieces in range(width_count + 1):
+        for short_pieces in range(short_count + 1):
+            if width_pieces == 0 and short_pieces == 0:
+                continue
+            used = width_pieces * width_consumed + short_pieces * short_consumed
+            if used <= STOCK_LENGTH_IN + 1e-9:
+                patterns.append((width_pieces, short_pieces, used))
+    patterns.sort(key=lambda pattern: (-pattern[2], -pattern[0], -pattern[1]))
+
+    infinity = width_count + short_count + 1
+    dp = [[infinity] * (short_count + 1) for _ in range(width_count + 1)]
+    previous = [[None] * (short_count + 1) for _ in range(width_count + 1)]
+    dp[0][0] = 0
+    for have_width in range(width_count + 1):
+        for have_short in range(short_count + 1):
+            if dp[have_width][have_short] == infinity:
+                continue
+            for add_width, add_short, used in patterns:
+                next_width = have_width + add_width
+                next_short = have_short + add_short
+                if next_width > width_count or next_short > short_count:
+                    continue
+                candidate = dp[have_width][have_short] + 1
+                if candidate < dp[next_width][next_short]:
+                    dp[next_width][next_short] = candidate
+                    previous[next_width][next_short] = (have_width, have_short, add_width, add_short, used)
+
+    if dp[width_count][short_count] == infinity:
+        raise RuntimeError("Unable to produce a complete stock cut plan")
+
+    stock_pieces = []
+    state = (width_count, short_count)
+    while state != (0, 0):
+        prior = previous[state[0]][state[1]]
+        if prior is None:
+            raise RuntimeError("Cut-plan reconstruction failed")
+        have_width, have_short, add_width, add_short, used = prior
+        cuts = [("width", LONG_CUT_IN)] * add_width + [("short", SHORT_CUT_IN)] * add_short
+        stock_pieces.append({"cuts": cuts, "used_in": used})
+        state = (have_width, have_short)
+    stock_pieces.sort(key=lambda stock: -stock["used_in"])
+    return stock_pieces
+
+
+def write_procurement_artifacts(pipe_axis_counts, connector_counts, dimensions_in):
+    stock_pieces = plan_stock_cuts(pipe_axis_counts)
+    with open(CUT_PLAN_PATH, "w", newline="", encoding="utf-8") as handle:
+        writer = csv.writer(handle, lineterminator="\n")
+        writer.writerow([
+            "stock_piece", "stock_length_in", "cuts_in_order", "piece_length_total_in",
+            "kerf_allowance_in", "estimated_remnant_in",
+        ])
+        for index, stock in enumerate(stock_pieces, start=1):
+            piece_total = sum(length for _, length in stock["cuts"])
+            kerf_total = len(stock["cuts"]) * CUT_KERF_IN
+            cuts = " | ".join(f"{label}:{format_inches(length)}" for label, length in stock["cuts"])
+            writer.writerow([
+                index, format_inches(STOCK_LENGTH_IN), cuts, format_inches(piece_total),
+                format_inches(kerf_total), format_inches(STOCK_LENGTH_IN - stock["used_in"]),
+            ])
+
+    total_piece_length = (
+        pipe_axis_counts["Y"] * LONG_CUT_IN
+        + (pipe_axis_counts["X"] + pipe_axis_counts["Z"]) * SHORT_CUT_IN
+    )
+    total_purchased = len(stock_pieces) * STOCK_LENGTH_IN
+    total_kerf = sum(len(stock["cuts"]) for stock in stock_pieces) * CUT_KERF_IN
+    estimated_remnant = total_purchased - total_piece_length - total_kerf
+
+    lines = [
+        f"# Shopping list — {STEPS}-padi PVC Golu display",
+        "",
+        "Quantities come from the generated geometry. Prices are intentionally omitted unless current local supplier pricing is researched separately.",
+        "",
+        "## PVC and fittings",
+        "",
+        f"- **{len(stock_pieces)} × {format_inches(ARGS.stock_length_ft)} ft** straight lengths of **{format_inches(NOMINAL_PIPE_SIZE_IN)} in nominal PVC**",
+        f"  - Planned finished pieces: {pipe_axis_counts['X'] + pipe_axis_counts['Z']} short cuts at {format_inches(SHORT_CUT_IN)} in and {pipe_axis_counts['Y']} width cuts at {format_inches(LONG_CUT_IN)} in",
+        f"  - Cut-plan allowance: {format_inches(CUT_KERF_IN)} in per cut",
+        f"  - Estimated total remnant after kerf: {format_inches(estimated_remnant)} in",
+    ]
+    for ports, qty in sorted(connector_counts.items()):
+        lines.append(f"- **{qty} × {ports}-port multi-axis PVC fittings**, with axes matching `connector_map.csv`")
+    lines.extend([
+        "",
+        "## Treads and retention",
+        "",
+    ])
+    if ARGS.no_boards:
+        lines.append("- No tread boards are included in this design.")
+    else:
+        lines.extend([
+            f"- **{STEPS} × tread boards**, each {format_inches(BOARD_WIDTH_IN)} × {format_inches(BOARD_DEPTH_IN)} × {format_inches(BOARD_THICKNESS_IN)} in",
+            "- Removable board straps/clips or another suitable retention system",
+        ])
+    lines.extend([
+        "",
+        "## Assembly and safety supplies",
+        "",
+        "- Tape measure, permanent marker, square, and level",
+        f"- Ratcheting PVC cutter rated for at least {format_inches(PIPE_OD_IN)} in OD, or a fine-tooth saw and miter box",
+        "- Deburring/chamfering tool or flat and round files",
+        "- Rubber mallet and a scrap wood tapping block",
+        "- Safety glasses and work gloves",
+        "- Clamps or a helper for joining the two side frames",
+        "- Anti-tip restraints appropriate to the installation location",
+        "- Optional joining supplies only when approved by the selected fitting manufacturer",
+        "",
+        "## Purchase checks",
+        "",
+        f"- Confirm the selected fittings fit {format_inches(NOMINAL_PIPE_SIZE_IN)} in nominal PVC with {format_inches(PIPE_OD_IN)} in OD.",
+        f"- Replace the generic {format_inches(SOCKET_STOP_OFFSET_IN)} in center-to-socket-stop assumption with the chosen fitting's measured value before cutting.",
+        f"- Confirm available stock is at least {format_inches(STOCK_LENGTH_IN)} in long and straight enough for the cuts in `cut_plan.csv`.",
+        f"- Confirm the intended installation can accommodate the modeled {format_inches(dimensions_in[0])} × {format_inches(dimensions_in[1])} × {format_inches(dimensions_in[2])} in envelope.",
+        "- Obtain independent structural and safety review for the intended load and environment.",
+        "",
+    ])
+    with open(SHOPPING_PATH, "w", encoding="utf-8") as handle:
+        handle.write("\n".join(lines))
+    return stock_pieces
 
 
 reset_scene()
@@ -671,6 +828,39 @@ bpy.ops.export_scene.gltf(
 mins, maxs = world_bbox(model_objects)
 dimensions_in = [(maxs[i] - mins[i]) / INCH for i in range(3)]
 write_assembly_artifacts(incidents, ys, connector_counts, pipe_axis_counts, dimensions_in)
+stock_pieces = write_procurement_artifacts(pipe_axis_counts, connector_counts, dimensions_in)
+
+manifest = {
+    "schema_version": 1,
+    "generator": "golu-padi-designer/scripts/build_golu_padi.py",
+    "requirements": {
+        "steps": STEPS,
+        "dimension_mode": ARGS.dimension_mode,
+        "short_input_in": ARGS.short,
+        "long_input_in": ARGS.long,
+        "boards_enabled": not ARGS.no_boards,
+    },
+    "pipe": {
+        "nominal_size_in": NOMINAL_PIPE_SIZE_IN,
+        "outside_diameter_in": PIPE_OD_IN,
+        "wall_in": PIPE_WALL_IN,
+        "socket_stop_offset_in": SOCKET_STOP_OFFSET_IN,
+    },
+    "derived_dimensions_in": {
+        "short_cut": SHORT_CUT_IN,
+        "long_cut": LONG_CUT_IN,
+        "short_pitch": SHORT_PITCH_IN,
+        "long_pitch": LONG_PITCH_IN,
+        "bounding_box_xyz": [round(v, 4) for v in dimensions_in],
+    },
+    "procurement": {
+        "stock_length_ft": ARGS.stock_length_ft,
+        "cut_kerf_in": CUT_KERF_IN,
+        "stock_pieces_required": len(stock_pieces),
+    },
+}
+with open(MANIFEST_PATH, "w", encoding="utf-8") as handle:
+    json.dump(manifest, handle, indent=2)
 
 qa = {
     "status": "PASS",
@@ -688,10 +878,12 @@ qa = {
         "pipe_outside_diameter": PIPE_OD_IN,
         "pipe_wall": PIPE_WALL_IN,
         "generic_fitting_hub_od": FITTING_HUB_OD_IN,
+        "stock_length_ft": ARGS.stock_length_ft,
+        "cut_kerf": CUT_KERF_IN,
     },
     "counts": {
-        "short_pipes": pipe_counts[SHORT_CUT_IN],
-        "long_pipes": pipe_counts[LONG_CUT_IN],
+        "short_pipes": pipe_axis_counts["X"] + pipe_axis_counts["Z"],
+        "long_pipes": pipe_axis_counts["Y"],
         "total_pipes": sum(pipe_counts.values()),
         "connectors": sum(connector_counts.values()),
         "tread_boards": 0 if ARGS.no_boards else STEPS,
@@ -707,6 +899,9 @@ qa = {
         "glb_exported": os.path.exists(GLB_PATH),
         "assembly_instructions_generated": os.path.exists(ASSEMBLY_PATH),
         "connector_map_generated": os.path.exists(CONNECTOR_MAP_PATH),
+        "shopping_list_generated": os.path.exists(SHOPPING_PATH),
+        "cut_plan_generated": os.path.exists(CUT_PLAN_PATH),
+        "design_manifest_generated": os.path.exists(MANIFEST_PATH),
     },
     "limitations": [
         "Generic fitting envelopes are used because no manufacturer/SKU was supplied.",
@@ -722,8 +917,8 @@ with open(BOM_PATH, "w", newline="", encoding="utf-8") as handle:
     writer.writerow(["category", "description", "quantity", "modeled_dimension", "note"])
     pipe_description = f"{NOMINAL_PIPE_SIZE_IN:g} in nominal PVC"
     pipe_note = f"OD {PIPE_OD_IN:.3f} in; wall {PIPE_WALL_IN:.3f} in"
-    writer.writerow(["pipe", pipe_description, pipe_counts[SHORT_CUT_IN], f"{SHORT_CUT_IN:.3f} in cut", pipe_note])
-    writer.writerow(["pipe", pipe_description, pipe_counts[LONG_CUT_IN], f"{LONG_CUT_IN:.3f} in cut", pipe_note])
+    writer.writerow(["pipe", pipe_description, pipe_axis_counts["X"] + pipe_axis_counts["Z"], f"{SHORT_CUT_IN:.3f} in cut", pipe_note])
+    writer.writerow(["pipe", pipe_description, pipe_axis_counts["Y"], f"{LONG_CUT_IN:.3f} in cut", pipe_note])
     for ports, qty in sorted(connector_counts.items()):
         writer.writerow(["fitting", f"generic multi-axis {ports}-port socket fitting", qty, "generic envelope", "select actual SKU before fabrication"])
     if not ARGS.no_boards:
@@ -740,6 +935,12 @@ scene["long_cut_in"] = LONG_CUT_IN
 scene["socket_stop_offset_in"] = SOCKET_STOP_OFFSET_IN
 scene["assembled_short_pitch_in"] = SHORT_PITCH_IN
 scene["assembled_long_pitch_in"] = LONG_PITCH_IN
+scene["nominal_pipe_size_in"] = NOMINAL_PIPE_SIZE_IN
+scene["pipe_od_in"] = PIPE_OD_IN
+scene["pipe_wall_in"] = PIPE_WALL_IN
+scene["boards_enabled"] = not ARGS.no_boards
+scene["stock_length_ft"] = ARGS.stock_length_ft
+scene["cut_kerf_in"] = CUT_KERF_IN
 scene.camera = cam_perspective
 bpy.ops.wm.save_as_mainfile(filepath=BLEND_PATH)
 

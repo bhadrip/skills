@@ -1,0 +1,14 @@
+stock_piece,stock_length_in,cuts_in_order,piece_length_total_in,kerf_allowance_in,estimated_remnant_in
+1,120,short:12 | short:12 | short:12 | short:12 | short:12 | short:12 | short:12 | short:12 | short:12,108,1.125,10.875
+2,120,short:12 | short:12 | short:12 | short:12 | short:12 | short:12 | short:12 | short:12 | short:12,108,1.125,10.875
+3,120,short:12 | short:12 | short:12 | short:12 | short:12 | short:12 | short:12 | short:12 | short:12,108,1.125,10.875
+4,120,short:12 | short:12 | short:12 | short:12 | short:12 | short:12 | short:12 | short:12 | short:12,108,1.125,10.875
+5,120,short:12 | short:12 | short:12 | short:12 | short:12 | short:12 | short:12 | short:12 | short:12,108,1.125,10.875
+6,120,width:36 | short:12 | short:12 | short:12 | short:12 | short:12 | short:12,108,0.875,11.125
+7,120,width:36 | width:36 | width:36,108,0.375,11.625
+8,120,width:36 | width:36 | width:36,108,0.375,11.625
+9,120,width:36 | width:36 | width:36,108,0.375,11.625
+10,120,width:36 | width:36 | width:36,108,0.375,11.625
+11,120,width:36 | width:36 | width:36,108,0.375,11.625
+12,120,width:36 | width:36 | width:36,108,0.375,11.625
+13,120,short:12 | short:12 | short:12 | short:12 | short:12,60,0.625,59.375
