@@ -32,6 +32,18 @@ At each node, collect every incident direction from `+X`, `-X`, `+Y`, `-Y`, `+Z`
 
 The bundled model uses generic 3-, 4-, and 5-port furniture-style fitting envelopes. Actual part availability and socket geometry must be checked against a manufacturer catalog before fabrication.
 
+## Generated assembly sequence
+
+The assembly guide labels depth stations `D0` through `DN` and height levels `H0` through `HN`. It builds the base first, then adds one height layer at a time.
+
+For level `Hh`, where `h` runs from 1 through `N`:
+
+- vertical short members: `2 × (N - h + 2)`;
+- depth short members: `2 × (N - h + 1)`;
+- width members: `N - h + 2`.
+
+The `H0` base separately uses `2N` short depth members and `N + 1` width members. These counts must reconcile with the BOM generated from the edge graph. Boards are installed after the complete frame is squared so they do not obstruct fitting access.
+
 ## Scope
 
 The output is suitable for visualization, dimension review, BOM planning, and discussion with a fabricator. It is not a calculation of PVC deflection, buckling, joint pullout, shelf capacity, seismic stability, or child safety.

@@ -19,6 +19,8 @@ ROOT = os.path.abspath(ARGS.output_dir)
 STEM = f"golu_padi_{ARGS.steps}step"
 GLB_PATH = os.path.join(ROOT, STEM + ".glb")
 OUT_PATH = os.path.join(ROOT, "reopen_validation.json")
+ASSEMBLY_PATH = os.path.join(ROOT, "assembly_instructions.md")
+CONNECTOR_MAP_PATH = os.path.join(ROOT, "connector_map.csv")
 INCH = 0.0254
 
 
@@ -56,6 +58,8 @@ checks_pass = (
     and blend_checks["all_pipes_have_cut_length"]
     and expected_steps == ARGS.steps
     and bool(glb_meshes)
+    and os.path.exists(ASSEMBLY_PATH)
+    and os.path.exists(CONNECTOR_MAP_PATH)
 )
 result = {
     "status": "PASS" if checks_pass else "FAIL",
@@ -63,6 +67,10 @@ result = {
     "glb_reimport": {
         "mesh_object_count": len(glb_meshes),
         "bounding_box_inches_xyz": bounds(imported),
+    },
+    "assembly_artifacts": {
+        "instructions_exist": os.path.exists(ASSEMBLY_PATH),
+        "connector_map_exists": os.path.exists(CONNECTOR_MAP_PATH),
     },
 }
 with open(OUT_PATH, "w", encoding="utf-8") as handle:

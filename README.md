@@ -9,6 +9,8 @@ Public Codex skills maintained by [bhadrip](https://github.com/bhadrip).
 - an editable Blender file;
 - a portable GLB;
 - a connector-aware bill of materials;
+- tailored, level-by-level assembly instructions;
+- an exact connector orientation map;
 - four inspection renders;
 - dimensional QA and export re-import validation.
 

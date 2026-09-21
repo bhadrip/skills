@@ -17,8 +17,10 @@ The distinction matters: a 12-inch cut tube inserted into two fittings does not 
 
 - `pvc_golu_padi_4step.blend` — editable, organized Blender source
 - `pvc_golu_padi_4step.glb` — portable model export
-- `build_pvc_golu_padi.py` — deterministic rebuild script
+- `../../golu-padi-designer/scripts/build_golu_padi.py` — reusable deterministic generator
 - `bom.csv` — modeled bill of materials
+- `assembly_instructions.md` — generated level-by-level build sequence
+- `connector_map.csv` — fitting port orientation at every labeled node
 - `qa_report.json` — dimensional and object-count checks
 - `reopen_validation.json` — saved Blend reopen and GLB re-import checks
 - `renders/` — perspective, side, front, and rear three-quarter inspection views

@@ -45,6 +45,8 @@ BLEND_PATH = os.path.join(ROOT, STEM + ".blend")
 GLB_PATH = os.path.join(ROOT, STEM + ".glb")
 REPORT_PATH = os.path.join(ROOT, "qa_report.json")
 BOM_PATH = os.path.join(ROOT, "bom.csv")
+ASSEMBLY_PATH = os.path.join(ROOT, "assembly_instructions.md")
+CONNECTOR_MAP_PATH = os.path.join(ROOT, "connector_map.csv")
 os.makedirs(RENDER_DIR, exist_ok=True)
 
 # All modeled lengths are SI internally. Inch values are the user-facing source of truth.
@@ -345,6 +347,140 @@ def world_bbox(objects):
     return mins, maxs
 
 
+def format_inches(value):
+    return f"{value:.3f}".rstrip("0").rstrip(".")
+
+
+def direction_labels(directions):
+    names = {
+        (1, 0, 0): "+X depth/rear",
+        (-1, 0, 0): "-X depth/front",
+        (0, 1, 0): "+Y width",
+        (0, -1, 0): "-Y width",
+        (0, 0, 1): "+Z up",
+        (0, 0, -1): "-Z down",
+    }
+    return [names[tuple(direction)] for direction in sorted(directions)]
+
+
+def write_assembly_artifacts(incidents, ys, connector_counts, pipe_axis_counts, dimensions_in):
+    with open(CONNECTOR_MAP_PATH, "w", newline="", encoding="utf-8") as handle:
+        writer = csv.writer(handle, lineterminator="\n")
+        writer.writerow(["node", "side", "depth_station", "height_level", "port_count", "port_directions"])
+        for xi, max_level in enumerate(max_levels):
+            for zi in range(max_level + 1):
+                for side_name, y in (("L", ys[0]), ("R", ys[1])):
+                    node = (xi * SHORT_PITCH, y, BASE_Z + zi * SHORT_PITCH)
+                    directions = incidents[node]
+                    writer.writerow([
+                        f"{side_name}-D{xi}-H{zi}", side_name, f"D{xi}", f"H{zi}",
+                        len(directions), "; ".join(direction_labels(directions)),
+                    ])
+
+    width_description = (
+        f"{format_inches(LONG_PITCH_IN)} in assembled center-to-center width"
+        if ARGS.dimension_mode == "pitch"
+        else f"{format_inches(LONG_CUT_IN)} in width-tube cuts producing a {format_inches(LONG_PITCH_IN)} in center pitch"
+    )
+    short_description = (
+        f"{format_inches(SHORT_PITCH_IN)} in assembled rise/run pitch"
+        if ARGS.dimension_mode == "pitch"
+        else f"{format_inches(SHORT_CUT_IN)} in short-tube cuts producing a {format_inches(SHORT_PITCH_IN)} in rise/run pitch"
+    )
+
+    lines = [
+        f"# Assembly instructions — {STEPS}-padi PVC Golu display",
+        "",
+        "These instructions are generated from the same node graph as the Blender model and BOM.",
+        "",
+        "## Design summary",
+        "",
+        f"- Levels: **{STEPS} padi**",
+        f"- Width requirement: **{width_description}**",
+        f"- Rise/run requirement: **{short_description}**",
+        f"- Exact short tube cut: **{format_inches(SHORT_CUT_IN)} in**",
+        f"- Exact width tube cut: **{format_inches(LONG_CUT_IN)} in**",
+        f"- Assumed fitting center-to-socket-stop distance: **{format_inches(SOCKET_STOP_OFFSET_IN)} in per end**",
+        f"- Modeled overall bounding box: **{format_inches(dimensions_in[0])} × {format_inches(dimensions_in[1])} × {format_inches(dimensions_in[2])} in** (depth × width × height)",
+        "",
+        "## Parts to prepare",
+        "",
+        f"- **{pipe_axis_counts['X'] + pipe_axis_counts['Z']}** short PVC members at **{format_inches(SHORT_CUT_IN)} in**: {pipe_axis_counts['X']} depth rails and {pipe_axis_counts['Z']} verticals",
+        f"- **{pipe_axis_counts['Y']}** width PVC members at **{format_inches(LONG_CUT_IN)} in**",
+    ]
+    for ports, qty in sorted(connector_counts.items()):
+        lines.append(f"- **{qty}** generic multi-axis **{ports}-port** fittings")
+    if not ARGS.no_boards:
+        lines.append(
+            f"- **{STEPS}** removable tread boards at **{format_inches(BOARD_WIDTH_IN)} × {format_inches(BOARD_DEPTH_IN)} × {format_inches(BOARD_THICKNESS_IN)} in**"
+        )
+    lines.extend([
+        "",
+        "## Labeling system",
+        "",
+        f"- Mark depth stations **D0** at the front through **D{STEPS}** at the rear.",
+        f"- Mark height levels **H0** at the floor through **H{STEPS}** at the top.",
+        "- `L` and `R` are the model's negative-Y and positive-Y side frames.",
+        "- Label each fitting by side, station, and height—for example, `L-D2-H1`.",
+        "- Use `connector_map.csv` to orient every fitting. Port count alone is insufficient; the port axes must also match.",
+        "",
+        "## Assembly sequence",
+        "",
+        "1. **Cut, deburr, and label all members.** Keep short depth rails, short verticals, and width members in separate bundles. Mark the socket insertion depth from the selected fitting manufacturer on every tube end.",
+        "",
+        "2. **Dry-build the H0 base.** On both L and R sides, connect D0 through D{n} with {shorts} short depth rails total. Join the two sides with {longs} width members at D0 through D{n}. Keep every joint unglued and only hand-tight at this stage.".format(
+            n=STEPS, shorts=2 * STEPS, longs=STEPS + 1
+        ),
+    ])
+
+    sequence_number = 3
+    for level in range(1, STEPS + 1):
+        first_station = level - 1
+        station_count = STEPS - level + 2
+        depth_bays = STEPS - level + 1
+        vertical_count = 2 * station_count
+        depth_count = 2 * depth_bays
+        width_count = station_count
+        bay_text = ", ".join(f"D{i}–D{i + 1}" for i in range(first_station, STEPS))
+        lines.extend([
+            "",
+            f"{sequence_number}. **Add level H{level}.**",
+            f"   - Install **{vertical_count} short vertical members** at stations D{first_station} through D{STEPS}, counting both sides.",
+            f"   - Install **{depth_count} short depth rails** across bays {bay_text} on the L and R sides.",
+            f"   - Bridge L to R with **{width_count} width members** at H{level}, stations D{first_station} through D{STEPS}.",
+            f"   - Match each H{level} fitting to its exact row in `connector_map.csv`; check that every unused-looking port is actually absent, not merely hidden or rotated away.",
+        ])
+        sequence_number += 1
+
+    lines.extend([
+        "",
+        f"{sequence_number}. **Square and seat the frame.** Place it on a flat floor. Measure both base diagonals and adjust until equal. Seat every tube to the same insertion-depth mark, then recheck plumb, level, and all diagonals.",
+    ])
+    sequence_number += 1
+    if not ARGS.no_boards:
+        lines.extend([
+            "",
+            f"{sequence_number}. **Install the tread boards only after the frame is square.**",
+        ])
+        for step in range(1, STEPS + 1):
+            lines.append(f"   - Board {step}: place over bay D{step - 1}–D{step} at height H{step}.")
+        lines.append("   - Use removable straps/clips or the user's chosen fastening system; the model does not assume screws through PVC.")
+        sequence_number += 1
+    lines.extend([
+        "",
+        f"{sequence_number}. **Final check before loading.** Confirm every connector orientation against the map, every joint insertion mark, board retention, floor contact, and anti-tip restraint. Follow the chosen fitting manufacturer's joining instructions; do not solvent-weld furniture fittings unless the manufacturer permits it.",
+        "",
+        "## Important limitations",
+        "",
+        "- The fitting envelope and socket offset are generic until replaced with manufacturer/SKU measurements.",
+        "- This guide is an assembly plan derived from geometry, not structural, load, seismic, or child-safety certification.",
+        "- Dry-fit the complete frame before making any irreversible joint.",
+        "",
+    ])
+    with open(ASSEMBLY_PATH, "w", encoding="utf-8") as handle:
+        handle.write("\n".join(lines))
+
+
 reset_scene()
 
 scene = bpy.context.scene
@@ -427,6 +563,7 @@ for zi in range(STEPS + 1):
 
 incidents = defaultdict(set)
 pipe_counts = Counter()
+pipe_axis_counts = Counter()
 for index, (a, b, cut_length_in, axis_name) in enumerate(sorted(edges)):
     av = Vector(a)
     bv = Vector(b)
@@ -440,6 +577,7 @@ for index, (a, b, cut_length_in, axis_name) in enumerate(sorted(edges)):
         cut_length_in, axis_name,
     )
     pipe_counts[cut_length_in] += 1
+    pipe_axis_counts[axis_name] += 1
 
 connector_counts = Counter()
 for node in sorted(nodes):
@@ -532,6 +670,7 @@ bpy.ops.export_scene.gltf(
 # Compute evaluated model bounds and QA metadata.
 mins, maxs = world_bbox(model_objects)
 dimensions_in = [(maxs[i] - mins[i]) / INCH for i in range(3)]
+write_assembly_artifacts(incidents, ys, connector_counts, pipe_axis_counts, dimensions_in)
 
 qa = {
     "status": "PASS",
@@ -566,6 +705,8 @@ qa = {
         "max_connector_ports": max(connector_counts),
         "render_count": 4,
         "glb_exported": os.path.exists(GLB_PATH),
+        "assembly_instructions_generated": os.path.exists(ASSEMBLY_PATH),
+        "connector_map_generated": os.path.exists(CONNECTOR_MAP_PATH),
     },
     "limitations": [
         "Generic fitting envelopes are used because no manufacturer/SKU was supplied.",
@@ -577,7 +718,7 @@ with open(REPORT_PATH, "w", encoding="utf-8") as handle:
     json.dump(qa, handle, indent=2)
 
 with open(BOM_PATH, "w", newline="", encoding="utf-8") as handle:
-    writer = csv.writer(handle)
+    writer = csv.writer(handle, lineterminator="\n")
     writer.writerow(["category", "description", "quantity", "modeled_dimension", "note"])
     pipe_description = f"{NOMINAL_PIPE_SIZE_IN:g} in nominal PVC"
     pipe_note = f"OD {PIPE_OD_IN:.3f} in; wall {PIPE_WALL_IN:.3f} in"

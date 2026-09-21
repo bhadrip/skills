@@ -1,8 +1,9 @@
 {
   "status": "PASS",
   "blender_version": "5.2.1 LTS",
-  "source_reference": "user-supplied concept image (not redistributed)",
-  "model_semantics": "12 in and 36 in are exact tube cut lengths; fitting allowance changes assembled pitch",
+  "steps": 4,
+  "dimension_mode": "cut",
+  "model_semantics": "cut mode treats member inputs as exact tube cuts; pitch mode treats them as assembled center spacing",
   "parameters_inches": {
     "short_tube_cut": 12.0,
     "long_tube_cut": 36.0,
@@ -15,8 +16,8 @@
     "generic_fitting_hub_od": 2.5
   },
   "counts": {
-    "12_in_pipes": 56,
-    "36_in_pipes": 19,
+    "short_pipes": 56,
+    "long_pipes": 19,
     "total_pipes": 75,
     "connectors": 38,
     "tread_boards": 4,
@@ -37,7 +38,9 @@
     "all_edge_endpoints_have_fittings": true,
     "max_connector_ports": 5,
     "render_count": 4,
-    "glb_exported": true
+    "glb_exported": true,
+    "assembly_instructions_generated": true,
+    "connector_map_generated": true
   },
   "limitations": [
     "Generic fitting envelopes are used because no manufacturer/SKU was supplied.",

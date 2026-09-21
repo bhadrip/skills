@@ -1,6 +1,6 @@
 category,description,quantity,modeled_dimension,note
-pipe,1-1/2 in nominal Schedule 40 PVC,56,12.000 in cut,OD 1.900 in; wall 0.145 in
-pipe,1-1/2 in nominal Schedule 40 PVC,19,36.000 in cut,OD 1.900 in; wall 0.145 in
+pipe,1.5 in nominal PVC,56,12.000 in cut,OD 1.900 in; wall 0.145 in
+pipe,1.5 in nominal PVC,19,36.000 in cut,OD 1.900 in; wall 0.145 in
 fitting,generic multi-axis 3-port socket fitting,14,generic envelope,select actual SKU before fabrication
 fitting,generic multi-axis 4-port socket fitting,12,generic envelope,select actual SKU before fabrication
 fitting,generic multi-axis 5-port socket fitting,12,generic envelope,select actual SKU before fabrication
