@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "blend_reopen": {
+    "pipe_count": 75,
+    "12_in_pipe_count": 56,
+    "36_in_pipe_count": 19,
+    "board_count": 4,
+    "saved_scene_short_cut_in": 12.0,
+    "saved_scene_long_cut_in": 36.0
+  },
+  "glb_reimport": {
+    "mesh_object_count": 417,
+    "bounding_box_inches_xyz": [
+      58.56,
+      40.56,
+      59.41
+    ]
+  }
+}

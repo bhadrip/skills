@@ -1,0 +1,4 @@
+interface:
+  display_name: "Golu Padi Designer"
+  short_description: "Design dimensioned PVC Golu display steps"
+  default_prompt: "Use $golu-padi-designer to design a dimensioned PVC Golu padi and generate a Blender model, BOM, and inspection renders."

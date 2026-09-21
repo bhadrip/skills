@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "blender_version": "5.2.1 LTS",
+  "source_reference": "user-supplied concept image (not redistributed)",
+  "model_semantics": "12 in and 36 in are exact tube cut lengths; fitting allowance changes assembled pitch",
+  "parameters_inches": {
+    "short_tube_cut": 12.0,
+    "long_tube_cut": 36.0,
+    "assumed_center_to_socket_stop_each_end": 1.0,
+    "assembled_short_pitch": 14.0,
+    "assembled_long_pitch": 38.0,
+    "nominal_pipe_size": 1.5,
+    "pipe_outside_diameter": 1.9,
+    "pipe_wall": 0.145,
+    "generic_fitting_hub_od": 2.5
+  },
+  "counts": {
+    "12_in_pipes": 56,
+    "36_in_pipes": 19,
+    "total_pipes": 75,
+    "connectors": 38,
+    "tread_boards": 4,
+    "connector_port_counts": {
+      "3": 14,
+      "4": 12,
+      "5": 12
+    }
+  },
+  "model_bounding_box_inches_xyz": [
+    58.56,
+    40.56,
+    59.41
+  ],
+  "checks": {
+    "all_pipe_lengths_exact": true,
+    "pipe_length_tolerance_in": 1e-05,
+    "all_edge_endpoints_have_fittings": true,
+    "max_connector_ports": 5,
+    "render_count": 4,
+    "glb_exported": true
+  },
+  "limitations": [
+    "Generic fitting envelopes are used because no manufacturer/SKU was supplied.",
+    "Replace SOCKET_STOP_OFFSET_IN and fitting dimensions with measured SKU data before cutting for fabrication.",
+    "This is a dimensioned visualization, not a structural/load certification."
+  ]
+}
