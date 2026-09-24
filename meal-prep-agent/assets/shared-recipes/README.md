@@ -1,8 +1,8 @@
-# Shared vegetarian and vegan recipes
+# Shared starter recipes
 
 Catalog version: **1.0.0**
 
-This public starter cookbook is designed for weekend preparation and no more than 20 minutes of hands-on weekday assembly. The recipes use original, concise wording and are safe to browse and share from GitHub.
+This public starter cookbook is designed for weekend preparation and no more than 20 minutes of hands-on weekday assembly. The current starter set reflects one family's vegetarian and vegan preferences; the meal-prep skill itself supports any household dietary pattern. The recipes use original, concise wording and are safe to browse and share from GitHub.
 
 Personal imports, ratings, family preferences, inventory, and customized variants do not belong here. Copy a recipe to a personal library before changing it. New shared recipes must be created specifically for this project or explicitly contributed for publication; external collections such as Wikibooks remain lookup-only and are never mirrored here.
 

@@ -1,6 +1,6 @@
 ---
 name: meal-prep-agent
-description: Manage a persistent vegetarian and vegan recipe library, import recipes from URLs, create recipe variations, plan quick dinners and weekend prep, maintain freezer inventory, consolidate shopping, guide cooking, and learn from meal feedback. Use for household meal-prep workflows; do not treat it as clinical nutrition or allergy advice.
+description: Manage a persistent household recipe library, import recipes from URLs, create recipe variations, plan quick dinners and weekend prep, maintain freezer inventory, consolidate shopping, guide cooking, and learn from meal feedback. Use for family meal-prep workflows across dietary patterns; do not treat it as clinical nutrition or allergy advice.
 ---
 
 # Meal Prep Agent
@@ -33,12 +33,12 @@ When a request spans modes, perform them in dependency order: inspect or update 
 
 Apply these defaults unless household data or the user says otherwise:
 
-- Offer at least 10 genuinely distinct vegetarian or vegan dinner options. Label each one accurately.
+- Offer at least 10 genuinely distinct dinner options that satisfy the household's current dietary preferences and constraints. Label each option's relevant dietary classification accurately.
 - Treat `weekday_assembly_minutes` as hands-on evening effort after planned weekend prep, not misleading total time. Keep it at or below 20 minutes. Surface passive heating, thawing, and total elapsed time separately.
 - Prefer plans that reuse ingredients deliberately, consume fragile produce before durable produce, and do not repeat the same flavor profile merely to reuse an ingredient.
 - Front-load safe, quality-preserving work into Saturday or Sunday: washing, chopping, sauces, cooked grains or beans, measured kits, and freezer batches.
 - Maintain a configurable emergency reserve; default to at least two complete dinners after the planned week. Use freezer stock before adding a new batch when dates and preferences support it.
-- Treat allergies and hard exclusions as constraints. Verify ambiguous packaged ingredients and cross-contamination concerns instead of inferring safety from a vegetarian or vegan label.
+- Treat allergies and hard exclusions as constraints. Verify ambiguous packaged ingredients and cross-contamination concerns instead of inferring safety from a broad dietary label.
 - Keep quantities, servings, units, dates, and assumptions explicit. Use ISO `YYYY-MM-DD` dates and local time with an offset for timestamps.
 
 ## Finish each operation

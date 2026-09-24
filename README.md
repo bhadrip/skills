@@ -4,11 +4,11 @@ Public Codex skills maintained by [bhadrip](https://github.com/bhadrip).
 
 ## Meal Prep Agent
 
-`meal-prep-agent` manages a persistent vegetarian/vegan recipe library and the full weekly loop: importing attributed recipes from URLs, creating non-destructive variations, proposing quick dinners, planning weekend prep and freezer reserves, consolidating shopping, guiding cooking, and learning from lightweight feedback.
+`meal-prep-agent` manages a persistent household recipe library and the full weekly loop: importing attributed recipes from URLs, creating non-destructive variations, proposing quick dinners, planning weekend prep and freezer reserves, consolidating shopping, guiding cooking, and learning from lightweight feedback. Each family defines its own dietary preferences and constraints.
 
 It keeps recipe, inventory, planning, shopping, cooking, and feedback concerns modular. A public, human-readable starter cookbook provides shared recipes, while personal recipes and household data remain separate. The included reference schemas define portable JSON records while shopper- and cook-facing views remain concise Markdown.
 
-Read the [usage guide](meal-prep-agent/README.md), browse the [shared starter cookbook](meal-prep-agent/assets/shared-recipes/README.md), invoke the skill as `$meal-prep-agent`, or ask naturally for a vegetarian or vegan meal plan, recipe import, freezer check, shopping list, cooking guidance, or post-meal feedback update.
+Read the [usage guide](meal-prep-agent/README.md), browse the [shared starter cookbook](meal-prep-agent/assets/shared-recipes/README.md), invoke the skill as `$meal-prep-agent`, or ask naturally for a meal plan, recipe import, freezer check, shopping list, cooking guidance, or post-meal feedback update.
 
 ## Golu Padi Designer
 

@@ -31,7 +31,7 @@
       "required": ["servings", "dietary_tags", "cuisines", "source_total_minutes"],
       "properties": {
         "servings": {"type": ["number", "null"], "exclusiveMinimum": 0},
-        "dietary_tags": {"type": "array", "items": {"enum": ["vegetarian", "vegan", "needs-review"]}, "minItems": 1, "uniqueItems": true},
+        "dietary_tags": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
         "cuisines": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "allergens": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "source_total_minutes": {"type": ["integer", "null"], "minimum": 0},

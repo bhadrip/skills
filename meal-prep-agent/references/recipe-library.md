@@ -18,11 +18,11 @@ Do not promote recipes looked up in Wikibooks or another external collection int
 
 ## Add a recipe from a URL
 
-1. Open the exact URL. Prefer recipe JSON-LD (`Recipe`) and then reconcile it with the visible page. Use visible content when structured data is absent or incomplete.
+1. Open the exact URL. Prefer recipe JSON-LD (`Recipe`), including records nested in `@graph`, and flatten nested `HowToSection`/`HowToStep` instructions without losing section order. Reconcile structured data with the visible page. Use visible content when structured data is absent or incomplete.
 2. Capture the canonical URL, page title, recipe title, author or organization, site name, retrieval timestamp, and any stated yield, timing, cuisine, diet, or allergen information.
-3. Normalize ingredients into structured entries while retaining the source wording in `original_text`. Separate quantity, unit, ingredient, preparation, and optionality only when supported by the page.
+3. Normalize ingredients into structured entries while retaining the source wording in `original_text`. Separate quantity, unit, ingredient, preparation, and optionality only when supported by the page. Apply confirmed household ingredient aliases, but keep materially different forms such as fresh ginger and ground ginger separate.
 4. Rewrite the method as concise, complete steps. Preserve required temperatures, timings, dependencies, and doneness cues, but do not copy article prose, personal stories, or more wording than needed to cook the recipe.
-5. Classify vegetarian or vegan from the actual ingredients, including garnishes and sauces. If unclear, use `dietary_tags: ["needs-review"]` and explain the ambiguity.
+5. Classify dietary fit from the actual ingredients, including garnishes and sauces, against the household's stated preferences and constraints. Record relevant tags such as `vegan`, `vegetarian`, `pescatarian`, or `omnivore`; if a required classification is unclear, include `needs-review` and explain the ambiguity.
 6. Estimate planning fields only when useful. Mark estimates and state their basis; do not silently replace the source's timing.
 7. Check for duplicates by canonical URL, source URL, and closely matching title/ingredient signatures. Prefer updating attribution metadata or creating a revision over silently adding a duplicate.
 8. Save the recipe record, update the rebuildable library index, validate it, and report its ID and source attribution.
@@ -44,7 +44,7 @@ For every proposed variation:
 - explain what changes and why;
 - identify ingredient substitutions and method changes;
 - flag flavor, texture, allergen, cost, prep, or freezing tradeoffs;
-- keep it vegetarian or vegan as requested;
+- keep it within the household's requested dietary constraints;
 - calculate the revised weekday assembly estimate rather than copying the original;
 - do not claim a substitution is equivalent when it changes structure or cooking behavior.
 

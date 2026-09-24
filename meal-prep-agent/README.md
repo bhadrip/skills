@@ -1,6 +1,6 @@
 # Meal Prep Agent
 
-`meal-prep-agent` is a Codex skill for running a personal vegetarian or vegan meal-prep system. It keeps a recipe library, plans quick dinners, front-loads work into the weekend, tracks emergency freezer meals, consolidates shopping, guides cooking, and learns from lightweight feedback.
+`meal-prep-agent` is a Codex skill for running a personal family meal-prep system. It keeps a recipe library, plans quick dinners, front-loads work into the weekend, tracks emergency freezer meals, consolidates shopping, guides cooking, and learns from lightweight feedback. Dietary patterns are household preferences, not restrictions built into the skill.
 
 The skill includes a small [public starter cookbook](assets/shared-recipes/README.md). Your personal recipes and household data stay outside the public repository.
 
@@ -18,6 +18,8 @@ Restart or refresh Codex if the skill does not appear immediately. Invoke it as 
 ## Start with household preferences
 
 Tell the agent the details that materially affect planning. You can add or revise them over time.
+
+For example, this project's household prefers vegetarian and vegan dinners:
 
 ```text
 Use $meal-prep-agent. We are two adults and one child. Keep dinners vegetarian,
@@ -70,7 +72,9 @@ first, use the spinach and peppers early, reuse ingredients without making every
 meal taste alike, and leave two emergency dinners in the freezer.
 ```
 
-The agent distinguishes hands-on weekday assembly from passive and total elapsed time. It uses personal recipes first, then the shared starter cookbook, and clearly labels new suggestions that have not been saved.
+The agent distinguishes hands-on weekday assembly from passive and total elapsed time. It uses personal recipes first, then the shared starter cookbook, and clearly labels new suggestions that have not been saved. Another household can specify omnivore, pescatarian, allergy-aware, religious, cultural, medical-professional-provided, or other constraints instead.
+
+You can lock meals you already like and regenerate only the remaining slots. Leftover nights link back to the original meal, so their ingredients are not purchased or deducted twice. Simple sides can be added directly to a meal without creating unnecessary recipe records.
 
 ## Prepare on Saturday or Sunday
 
@@ -103,6 +107,8 @@ that I confirmed, group the list by store section, and show which meals use each
 
 The skill keeps structured totals for future edits and produces a concise Markdown checklist for shopping.
 
+Checked items and manually added groceries remain in place when a plan change regenerates the list.
+
 ## Use cooking mode
 
 ```text
@@ -119,6 +125,8 @@ It took 24 minutes instead of 15. We would make it again with less chili.
 ```
 
 The raw event is appended to feedback history. Preference learning remains cautious: one reaction can adjust future rankings or timing estimates without becoming a permanent household ban.
+
+Cooked history is recorded separately from ratings, so the agent can remember when a meal was last served even when nobody leaves feedback. Corrections are reversible history events rather than silent deletion.
 
 ## Public and private recipes
 

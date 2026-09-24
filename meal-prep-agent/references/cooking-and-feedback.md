@@ -10,6 +10,8 @@ For interactive cooking, show one to three steps at a time and wait when the use
 
 Finish with storage or freezer directions for planned leftovers and identify the inventory updates that should be confirmed, not assumed.
 
+When the user confirms that the meal was cooked, append a cooked-history event even if they provide no rating. Use that durable history for “last cooked,” repetition avoidance, and later planning. If the user corrects a mistaken log, append a reversing event rather than silently deleting the original.
+
 ## Record lightweight feedback
 
 After a meal, favor a small prompt rather than a survey. Capture whichever signals the user supplies, such as:

@@ -7,7 +7,7 @@ Inspect the recipe library, household preferences, freezer and on-hand inventory
 Produce at least 10 distinct options. Library recipes should be the default source; clearly mark any new suggestion as `proposed` and do not add it to the library until the user asks. Each option should include:
 
 - recipe ID or `proposed` status;
-- title and vegetarian/vegan label;
+- title and dietary classification relevant to the household's preferences;
 - weekday hands-on assembly minutes, passive minutes, and total elapsed minutes;
 - weekend preparation it depends on;
 - ingredients already on hand, ingredients to buy, and a confidence note when inventory is stale;
@@ -15,11 +15,15 @@ Produce at least 10 distinct options. Library recipes should be the default sour
 - leftovers or planned reuse;
 - freezer suitability and a simple household-friendly adjustment when relevant.
 
+A meal may contain one or more recipes plus loose components such as fruit, bread, a bagged salad, or a simple side that does not deserve its own recipe record. Keep those components explicit so they appear in shopping and prep without polluting the recipe library.
+
 An option meets the quick-dinner constraint only when weekday hands-on assembly is no more than 20 minutes after its declared prep. Do not hide chopping, thawing, marinating, pressure release, cleanup-heavy blending, or appliance preheating. If an exception is valuable, label it and explain why; do not count it toward the compliant minimum.
 
 ## Select and schedule meals
 
 If the user has not selected meals, make a clearly labeled draft selection based on their requested number of dinners. Schedule the most fragile produce first, account for leftovers, vary cuisines and textures, and avoid placing meals that depend on the same unfinished component too far apart.
+
+When revising a plan, preserve meals the user has locked or approved and regenerate only the requested slots. Model a leftover meal as a link to the earlier cooked meal; it must not add the original ingredients to the shopping list or consume inventory twice.
 
 Record ingredient reuse as intentional links rather than merely repeating ingredients. For each reused ingredient, show which meals consume it and the planned quantity when known.
 
@@ -64,5 +68,7 @@ Preserve both normalized totals and recipe-level traceability. Group the shopper
 - package-size or unit-conversion assumptions;
 - ingredients shared by multiple meals;
 - ingredients with a likely remainder and a plan to use or freeze it.
+
+Give every shopping item a stable ID. When regenerating after a plan edit, preserve already checked items and manually added items unless the user explicitly removes them. Allow household-configured store sections or aisle order instead of assuming one universal layout.
 
 Save structured JSON for regeneration and a concise Markdown checklist for use in the store.

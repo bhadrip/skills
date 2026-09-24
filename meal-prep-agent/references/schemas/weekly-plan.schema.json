@@ -91,7 +91,7 @@
         "option_id": {"type": "string"},
         "recipe_id": {"type": ["string", "null"]},
         "title": {"type": "string"},
-        "dietary_label": {"enum": ["vegetarian", "vegan", "needs-review"]},
+        "dietary_label": {"type": "string", "minLength": 1},
         "planned_date": {"type": ["string", "null"], "format": "date"},
         "weekday_assembly_minutes": {"type": "integer", "minimum": 0},
         "passive_minutes": {"type": "integer", "minimum": 0},
@@ -99,6 +99,23 @@
         "weekend_dependencies": {"type": "array", "items": {"type": "string"}},
         "uses_at_risk": {"type": "array", "items": {"type": "string"}},
         "inventory_confidence": {"enum": ["confirmed", "stale", "unknown"]},
+        "locked": {"type": "boolean"},
+        "leftover_of_option_id": {"type": ["string", "null"]},
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "title"],
+            "properties": {
+              "kind": {"enum": ["recipe", "ad-hoc", "leftover"]},
+              "title": {"type": "string", "minLength": 1},
+              "recipe_id": {"type": ["string", "null"]},
+              "leftover_of_option_id": {"type": ["string", "null"]},
+              "shopping_items": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        },
         "notes": {"type": "array", "items": {"type": "string"}}
       }
     }

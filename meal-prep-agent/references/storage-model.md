@@ -13,7 +13,8 @@ meal-prep-agent/
 |-- library/
 |   |-- recipes/
 |   |   `-- <recipe-id>.json
-|   `-- index.json
+|   |-- index.json
+|   `-- ingredient-aliases.json
 |-- inventory/
 |   |-- freezer.json
 |   `-- on-hand.json
@@ -21,6 +22,8 @@ meal-prep-agent/
 |   `-- household.json
 |-- feedback/
 |   `-- events.jsonl
+|-- history/
+|   `-- cooked-events.jsonl
 |-- plans/
 |   `-- <week-start>-plan.json
 `-- shopping/
@@ -39,6 +42,7 @@ Validate records against the schemas when a validator is available:
 - [schemas/weekly-plan.schema.json](schemas/weekly-plan.schema.json) for candidates, selected meals, prep work, reuse, and emergency coverage;
 - [schemas/shopping-list.schema.json](schemas/shopping-list.schema.json) for consolidated quantities with recipe traceability;
 - [schemas/feedback-event.schema.json](schemas/feedback-event.schema.json) for each append-only feedback line.
+- [schemas/cooked-event.schema.json](schemas/cooked-event.schema.json) for durable cooking history and explicit corrections.
 
 Preferences do not need a rigid schema. Keep `preferences/household.json` small and reviewable:
 
@@ -72,6 +76,8 @@ Preferences do not need a rigid schema. Keep `preferences/household.json` small 
 - When adopting a shared recipe, copy it into `library/recipes/`, retain its shared recipe ID and catalog version, assign a personal stable ID, and customize only the personal copy.
 - Do not embed feedback or inventory mutations inside recipe records. Join them by `recipe_id`.
 - Append feedback as one valid JSON object per line. Do not rewrite history merely because preferences changed.
+- Record a confirmed cooked meal separately from optional feedback so recency and repetition still work when nobody rates dinner. Undo mistakes with a new reversing event rather than deleting history.
+- Normalize ingredient aliases through `library/ingredient-aliases.json`, while retaining the user's display wording. Never merge similarly named ingredients when their culinary form differs.
 - Update inventory quantities only after the user confirms purchase, consumption, freezing, thawing, discard, or correction. A proposed plan is not proof of an inventory change.
 - Before overwriting a plan or shopping output for the same week, preserve user selections and manual edits or write a clearly versioned replacement.
 - Use `null` for unknown values. Do not invent exact quantities, dates, nutrition, or shelf life.
