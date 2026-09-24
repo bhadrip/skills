@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meal Prep Agent"
+  short_description: "Plan, shop, cook, and learn vegetarian meals"
+  default_prompt: "Use $meal-prep-agent to manage my vegetarian/vegan recipe library and plan quick dinners."

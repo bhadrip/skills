@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/meal-prep/weekly-plan.schema.json",
+  "title": "Meal Prep Weekly Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "week_start", "status", "options", "selected_meals", "prep_sessions", "ingredient_reuse", "spoilage_strategy", "emergency_reserve", "created_at", "updated_at"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "id": {"type": "string", "minLength": 1},
+    "week_start": {"type": "string", "format": "date"},
+    "status": {"enum": ["draft", "selected", "completed"]},
+    "options": {
+      "type": "array",
+      "minItems": 10,
+      "items": {"$ref": "#/$defs/meal"}
+    },
+    "selected_meals": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {"$ref": "#/$defs/meal"},
+          {"required": ["planned_date"]}
+        ]
+      }
+    },
+    "prep_sessions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["date", "tasks"],
+        "properties": {
+          "date": {"type": "string", "format": "date"},
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["component", "recipe_ids", "active_minutes", "passive_minutes", "storage"],
+              "properties": {
+                "component": {"type": "string"},
+                "amount": {"type": ["string", "null"]},
+                "recipe_ids": {"type": "array", "items": {"type": "string"}},
+                "active_minutes": {"type": "integer", "minimum": 0},
+                "passive_minutes": {"type": "integer", "minimum": 0},
+                "equipment": {"type": "array", "items": {"type": "string"}},
+                "storage": {"type": "string"},
+                "weekday_finish": {"type": ["string", "null"]}
+              }
+            }
+          }
+        }
+      }
+    },
+    "ingredient_reuse": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ingredient", "recipe_ids"],
+        "properties": {
+          "ingredient": {"type": "string"},
+          "recipe_ids": {"type": "array", "minItems": 2, "items": {"type": "string"}},
+          "planned_total": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "spoilage_strategy": {"type": "array", "items": {"type": "string"}},
+    "emergency_reserve": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_dinners", "projected_dinners_after_week", "items"],
+      "properties": {
+        "target_dinners": {"type": "integer", "minimum": 0},
+        "projected_dinners_after_week": {"type": "integer", "minimum": 0},
+        "items": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "shopping_list_id": {"type": ["string", "null"]},
+    "assumptions": {"type": "array", "items": {"type": "string"}},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "meal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["option_id", "recipe_id", "title", "dietary_label", "weekday_assembly_minutes", "passive_minutes", "total_elapsed_minutes", "weekend_dependencies", "uses_at_risk", "inventory_confidence"],
+      "properties": {
+        "option_id": {"type": "string"},
+        "recipe_id": {"type": ["string", "null"]},
+        "title": {"type": "string"},
+        "dietary_label": {"enum": ["vegetarian", "vegan", "needs-review"]},
+        "planned_date": {"type": ["string", "null"], "format": "date"},
+        "weekday_assembly_minutes": {"type": "integer", "minimum": 0},
+        "passive_minutes": {"type": "integer", "minimum": 0},
+        "total_elapsed_minutes": {"type": "integer", "minimum": 0},
+        "weekend_dependencies": {"type": "array", "items": {"type": "string"}},
+        "uses_at_risk": {"type": "array", "items": {"type": "string"}},
+        "inventory_confidence": {"enum": ["confirmed", "stale", "unknown"]},
+        "notes": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/meal-prep/inventory.schema.json",
+  "title": "Meal Prep Inventory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "location", "updated_at", "items"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "location": {"enum": ["freezer", "refrigerator", "pantry", "other"]},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "kind", "quantity", "unit", "confirmed_at"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "name": {"type": "string", "minLength": 1},
+          "kind": {"enum": ["ingredient", "prepared-component", "complete-meal"]},
+          "recipe_id": {"type": ["string", "null"]},
+          "quantity": {"type": "number", "minimum": 0},
+          "unit": {"type": "string", "minLength": 1},
+          "servings": {"type": ["number", "null"], "minimum": 0},
+          "frozen_on": {"type": ["string", "null"], "format": "date"},
+          "opened_on": {"type": ["string", "null"], "format": "date"},
+          "best_use_by": {"type": ["string", "null"], "format": "date"},
+          "guidance_basis": {"enum": ["label", "source", "user", "cited-guideline", "unknown"]},
+          "guidance_note": {"type": ["string", "null"]},
+          "thaw_reheat_notes": {"type": ["string", "null"]},
+          "confirmed_at": {"type": "string", "format": "date-time"}
+        }
+      }
+    }
+  }
+}

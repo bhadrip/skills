@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/meal-prep/recipe.schema.json",
+  "title": "Meal Prep Recipe",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "status", "source", "metadata", "ingredients", "instructions", "planning", "created_at", "updated_at"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "title": {"type": "string", "minLength": 1},
+    "status": {"enum": ["active", "needs-review", "archived"]},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "title", "retrieved_at", "attribution"],
+      "properties": {
+        "type": {"enum": ["url", "user", "household-adaptation", "skill-curated"]},
+        "url": {"type": ["string", "null"], "format": "uri"},
+        "canonical_url": {"type": ["string", "null"], "format": "uri"},
+        "title": {"type": "string"},
+        "author": {"type": ["string", "null"]},
+        "site_name": {"type": ["string", "null"]},
+        "retrieved_at": {"type": "string", "format": "date-time"},
+        "attribution": {"type": "string", "minLength": 1}
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["servings", "dietary_tags", "cuisines", "source_total_minutes"],
+      "properties": {
+        "servings": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "dietary_tags": {"type": "array", "items": {"enum": ["vegetarian", "vegan", "needs-review"]}, "minItems": 1, "uniqueItems": true},
+        "cuisines": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "allergens": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "source_total_minutes": {"type": ["integer", "null"], "minimum": 0},
+        "yield_text": {"type": ["string", "null"]}
+      }
+    },
+    "ingredients": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["original_text", "name", "normalized_name", "quantity", "unit", "preparation", "optional"],
+        "properties": {
+          "original_text": {"type": "string", "minLength": 1},
+          "name": {"type": "string", "minLength": 1},
+          "normalized_name": {"type": "string", "minLength": 1},
+          "quantity": {"type": ["number", "string", "null"]},
+          "unit": {"type": ["string", "null"]},
+          "preparation": {"type": ["string", "null"]},
+          "optional": {"type": "boolean"},
+          "group": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "instructions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["step", "text"],
+        "properties": {
+          "step": {"type": "integer", "minimum": 1},
+          "text": {"type": "string", "minLength": 1},
+          "active_minutes": {"type": ["integer", "null"], "minimum": 0},
+          "equipment": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+        }
+      }
+    },
+    "planning": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["weekday_assembly_minutes", "passive_minutes", "total_elapsed_minutes", "weekend_prep", "freezer_suitability"],
+      "properties": {
+        "weekday_assembly_minutes": {"type": ["integer", "null"], "minimum": 0},
+        "passive_minutes": {"type": ["integer", "null"], "minimum": 0},
+        "total_elapsed_minutes": {"type": ["integer", "null"], "minimum": 0},
+        "timing_is_estimate": {"type": "boolean"},
+        "weekend_prep": {"type": "array", "items": {"type": "string"}},
+        "freezer_suitability": {"type": ["string", "null"]},
+        "leftover_uses": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "derived_from": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recipe_id", "relationship", "variation_summary"],
+      "properties": {
+        "recipe_id": {"type": "string"},
+        "relationship": {"const": "variation"},
+        "variation_summary": {"type": "string", "minLength": 1}
+      }
+    },
+    "shared_recipe_id": {"type": ["string", "null"]},
+    "shared_catalog_version": {"type": ["string", "null"]},
+    "notes": {"type": "array", "items": {"type": "string"}},
+    "revision_note": {"type": ["string", "null"]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"}
+  }
+}
