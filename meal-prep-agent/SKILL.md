@@ -2,8 +2,8 @@
 name: meal-prep-agent
 description: Manage a persistent household recipe library, import recipes from URLs, create recipe variations, plan quick dinners and weekend prep, maintain freezer inventory, consolidate shopping, guide cooking, and learn from meal feedback. Use for family meal-prep workflows across dietary patterns; do not treat it as clinical nutrition or allergy advice.
 metadata:
-  version: "0.1.0"
-  compatibility: Codex, Claude Code, and Claude.ai; URL imports need web access, and durable household storage needs persistent file access.
+  version: "0.1.1"
+  compatibility: ChatGPT workspaces with Skills enabled, Codex, Claude Code, and Claude.ai; URL imports need web access, and durable household storage needs persistent access.
 ---
 
 # Meal Prep Agent
