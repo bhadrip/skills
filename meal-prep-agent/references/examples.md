@@ -2,6 +2,50 @@
 
 These examples show record shape, not a mandatory menu.
 
+## Confirmed household profile
+
+```json
+{
+  "schema_version": "1.0",
+  "status": "confirmed",
+  "household": {
+    "description": "2 adults and 1 child",
+    "default_servings": 4,
+    "member_preferences": []
+  },
+  "hard_constraints": {
+    "dietary_rules": ["vegetarian"],
+    "allergies_or_intolerances": [],
+    "other_exclusions": [],
+    "uncertainties": []
+  },
+  "planning": {
+    "dinners_per_cycle": 5,
+    "planned_days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    "weekday_hands_on_minutes_max": 20,
+    "weekend_prep": {
+      "available": true,
+      "preferred_days": ["Sunday"],
+      "hands_on_minutes_max": 90
+    }
+  },
+  "primary_goal": "Reduce evening stress",
+  "biggest_difficulties": ["Decision fatigue", "Fresh vegetables spoil before use"],
+  "optional_preferences": {
+    "likes": [],
+    "dislikes": ["mushrooms"],
+    "cuisines": ["Indian", "Mexican", "Mediterranean"],
+    "spice_preferences": ["Mild for child; medium for adults"],
+    "planning_preferences": ["At least half of dinners vegan"],
+    "equipment": ["stovetop", "oven", "pressure cooker"],
+    "freezer_notes": "Space for about four dinner containers",
+    "budget_notes": null
+  },
+  "confirmed_at": "2026-09-23T14:00:00-07:00",
+  "updated_at": "2026-09-23T14:00:00-07:00"
+}
+```
+
 ## Imported recipe and saved variation
 
 ```json

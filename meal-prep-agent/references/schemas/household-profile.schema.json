@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/meal-prep/household-profile.schema.json",
+  "title": "Meal Prep Household Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status",
+    "household",
+    "hard_constraints",
+    "planning",
+    "primary_goal",
+    "biggest_difficulties",
+    "optional_preferences",
+    "confirmed_at",
+    "updated_at"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "status": {"const": "confirmed"},
+    "household": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description", "default_servings"],
+      "properties": {
+        "description": {"type": "string", "minLength": 1},
+        "default_servings": {"type": "integer", "minimum": 1},
+        "member_preferences": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["member", "preferences"],
+            "properties": {
+              "member": {"type": "string", "minLength": 1},
+              "preferences": {"type": "array", "items": {"type": "string", "minLength": 1}}
+            }
+          }
+        }
+      }
+    },
+    "hard_constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dietary_rules", "allergies_or_intolerances", "other_exclusions", "uncertainties"],
+      "properties": {
+        "dietary_rules": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "allergies_or_intolerances": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "other_exclusions": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "uncertainties": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "planning": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dinners_per_cycle", "planned_days", "weekday_hands_on_minutes_max", "weekend_prep"],
+      "properties": {
+        "dinners_per_cycle": {"type": "integer", "minimum": 1, "maximum": 14},
+        "planned_days": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "weekday_hands_on_minutes_max": {"type": "integer", "minimum": 0},
+        "weekend_prep": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["available", "preferred_days", "hands_on_minutes_max"],
+          "properties": {
+            "available": {"type": "boolean"},
+            "preferred_days": {"type": "array", "uniqueItems": true, "items": {"enum": ["Saturday", "Sunday"]}},
+            "hands_on_minutes_max": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    "primary_goal": {"type": "string", "minLength": 1},
+    "biggest_difficulties": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "optional_preferences": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "likes": {"type": "array", "items": {"type": "string"}},
+        "dislikes": {"type": "array", "items": {"type": "string"}},
+        "cuisines": {"type": "array", "items": {"type": "string"}},
+        "spice_preferences": {"type": "array", "items": {"type": "string"}},
+        "planning_preferences": {"type": "array", "items": {"type": "string"}},
+        "equipment": {"type": "array", "items": {"type": "string"}},
+        "freezer_notes": {"type": ["string", "null"]},
+        "budget_notes": {"type": ["string", "null"]}
+      }
+    },
+    "confirmed_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"}
+  }
+}

@@ -2,6 +2,13 @@
 
 This file records user-visible changes to the Meal Prep Agent skill. Versions follow semantic versioning: patch releases clarify or fix compatible behavior, minor releases add compatible capabilities or schemas, and major releases may require household-data migration.
 
+## 0.2.0 - 2026-09-23
+
+- Replace the two competing README starting points with one two-minute onboarding flow.
+- Define seven required planning inputs covering household, safety constraints, schedule, time, goals, and difficulties.
+- Keep deeper preferences optional and learn them gradually from explicit updates and feedback.
+- Add a confirmed household-profile schema and first-use, confirmation, persistence, and update behavior.
+
 ## 0.1.1 - 2026-09-23
 
 - Put practical usage examples and compelling workflows before installation details in the public README.

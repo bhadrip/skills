@@ -37,6 +37,7 @@ Create `library/index.json` as a rebuildable catalog of recipe ID, title, dietar
 
 Validate records against the schemas when a validator is available:
 
+- [schemas/household-profile.schema.json](schemas/household-profile.schema.json) for confirmed onboarding answers and stable preferences;
 - [schemas/recipe.schema.json](schemas/recipe.schema.json) for normalized recipes and separately stored variations;
 - [schemas/inventory.schema.json](schemas/inventory.schema.json) for freezer and on-hand stock;
 - [schemas/weekly-plan.schema.json](schemas/weekly-plan.schema.json) for candidates, selected meals, prep work, reuse, and emergency coverage;
@@ -44,27 +45,30 @@ Validate records against the schemas when a validator is available:
 - [schemas/feedback-event.schema.json](schemas/feedback-event.schema.json) for each append-only feedback line.
 - [schemas/cooked-event.schema.json](schemas/cooked-event.schema.json) for durable cooking history and explicit corrections.
 
-Preferences do not need a rigid schema. Keep `preferences/household.json` small and reviewable:
+Keep `preferences/household.json` small, reviewable, and valid against the household-profile schema:
 
 ```json
 {
   "schema_version": "1.0",
-  "household": {"adults": 2, "children": 1},
-  "hard_constraints": ["vegetarian"],
-  "soft_preferences": [
-    {
-      "subject": "broccoli",
-      "signal": "dislike",
-      "weight": 0.4,
-      "evidence_count": 2,
-      "last_observed_at": "2026-09-20T19:30:00-07:00"
-    }
-  ],
-  "planning_defaults": {
-    "weekday_assembly_minutes_max": 20,
-    "minimum_dinner_options": 10,
-    "emergency_dinners_target": 2
-  }
+  "status": "confirmed",
+  "household": {"description": "2 adults and 1 child", "default_servings": 4},
+  "hard_constraints": {
+    "dietary_rules": ["vegetarian"],
+    "allergies_or_intolerances": [],
+    "other_exclusions": [],
+    "uncertainties": []
+  },
+  "planning": {
+    "dinners_per_cycle": 5,
+    "planned_days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    "weekday_hands_on_minutes_max": 20,
+    "weekend_prep": {"available": true, "preferred_days": ["Sunday"], "hands_on_minutes_max": 90}
+  },
+  "primary_goal": "Reduce evening stress",
+  "biggest_difficulties": ["Decision fatigue", "Fresh vegetables spoil before use"],
+  "optional_preferences": {"likes": [], "dislikes": [], "cuisines": [], "spice_preferences": [], "planning_preferences": ["At least half of dinners vegan"]},
+  "confirmed_at": "2026-09-23T14:00:00-07:00",
+  "updated_at": "2026-09-23T14:00:00-07:00"
 }
 ```
 
@@ -79,6 +83,7 @@ Preferences do not need a rigid schema. Keep `preferences/household.json` small 
 - Record a confirmed cooked meal separately from optional feedback so recency and repetition still work when nobody rates dinner. Undo mistakes with a new reversing event rather than deleting history.
 - Normalize ingredient aliases through `library/ingredient-aliases.json`, while retaining the user's display wording. Never merge similarly named ingredients when their culinary form differs.
 - Update inventory quantities only after the user confirms purchase, consumption, freezing, thawing, discard, or correction. A proposed plan is not proof of an inventory change.
+- Save a household profile only after the user confirms the onboarding summary. Treat an explicit `none` as an empty array and preserve `not sure` details in `hard_constraints.uncertainties` rather than guessing.
 - Before overwriting a plan or shopping output for the same week, preserve user selections and manual edits or write a clearly versioned replacement.
 - Use `null` for unknown values. Do not invent exact quantities, dates, nutrition, or shelf life.
 

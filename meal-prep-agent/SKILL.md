@@ -2,7 +2,7 @@
 name: meal-prep-agent
 description: Manage a persistent household recipe library, import recipes from URLs, create recipe variations, plan quick dinners and weekend prep, maintain freezer inventory, consolidate shopping, guide cooking, and learn from meal feedback. Use for family meal-prep workflows across dietary patterns; do not treat it as clinical nutrition or allergy advice.
 metadata:
-  version: "0.1.1"
+  version: "0.2.0"
   compatibility: ChatGPT workspaces with Skills enabled, Codex, Claude Code, and Claude.ai; URL imports need web access, and durable household storage needs persistent access.
 ---
 
@@ -11,6 +11,10 @@ metadata:
 Build an evolving household meal system around a first-class recipe library. Keep five capabilities modular: library, planning, shopping, cooking, and feedback.
 
 The skill includes a public, read-only starter cookbook at [assets/shared-recipes/README.md](assets/shared-recipes/README.md). Use it when the personal library is small or the user asks for shared recipes. Copy a selected recipe into personal storage before customizing it; never write household state into the installed skill.
+
+## Begin personalized planning with onboarding
+
+Before the first personalized plan, check for a confirmed household profile. If none exists, read [references/onboarding.md](references/onboarding.md) and run the short onboarding flow. Reuse details the user already supplied, distinguish hard constraints from preferences, confirm the summary before saving it, and then deliver an immediate useful result. Do not force onboarding for a one-off recipe import, variation brainstorm, emergency suggestion, or cooking question that can be answered safely with explicit assumptions.
 
 ## Resolve storage before writing
 
@@ -24,6 +28,7 @@ If durable storage is unavailable, return the proposed records as JSON or Markdo
 
 Use only the references needed for the requested operation:
 
+- To create, review, or update a household profile, or when a first personalized plan lacks required context, read [references/onboarding.md](references/onboarding.md).
 - To add, find, update, vary, or publish recipes, read [references/recipe-library.md](references/recipe-library.md).
 - To discover recipes from external open collections, read [references/open-recipe-sources.md](references/open-recipe-sources.md). Consult those collections on demand and link users to them; do not mirror or bulk-import them into this skill.
 - To propose dinners, build a weekly plan, prepare on Saturday/Sunday, manage freezer meals, reduce spoilage, or consolidate shopping, read [references/planning-and-shopping.md](references/planning-and-shopping.md).
