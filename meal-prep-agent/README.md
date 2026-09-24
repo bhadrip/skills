@@ -1,19 +1,90 @@
 # Meal Prep Agent
 
-`meal-prep-agent` is a Codex skill for running a personal family meal-prep system. It keeps a recipe library, plans quick dinners, front-loads work into the weekend, tracks emergency freezer meals, consolidates shopping, guides cooking, and learns from lightweight feedback. Dietary patterns are household preferences, not restrictions built into the skill.
+`meal-prep-agent` is an Agent Skill for running a personal family meal-prep system with Codex, Claude Code, or Claude.ai. It keeps a recipe library, plans quick dinners, front-loads work into the weekend, tracks emergency freezer meals, consolidates shopping, guides cooking, and learns from lightweight feedback. Dietary patterns are household preferences, not restrictions built into the skill.
 
 The skill includes a small [public starter cookbook](assets/shared-recipes/README.md). Your personal recipes and household data stay outside the public repository.
 
-## Install
+## Install from GitHub
 
-Clone this repository and copy the skill folder into your Codex skills directory:
+The recommended setup is one local clone with a linked skill folder. A later `git pull` then updates the instructions and shared cookbook without touching private household data.
+
+Clone the repository once:
 
 ```sh
-git clone https://github.com/bhadrip/skills.git
-cp -R skills/meal-prep-agent "${CODEX_HOME:-$HOME/.codex}/skills/"
+git clone https://github.com/bhadrip/skills.git ~/src/bhadrip-skills
 ```
 
-Restart or refresh Codex if the skill does not appear immediately. Invoke it as `$meal-prep-agent`, or describe a matching meal-planning request naturally.
+### Codex
+
+Install it for every Codex project on this computer:
+
+```sh
+mkdir -p ~/.agents/skills
+ln -s ~/src/bhadrip-skills/meal-prep-agent ~/.agents/skills/meal-prep-agent
+```
+
+For one repository only, link or copy the folder to `.agents/skills/meal-prep-agent` inside that repository instead. Codex recognizes linked skill folders. If it does not appear immediately, restart Codex. Invoke it as `$meal-prep-agent`, select it from `/skills`, or describe a matching meal-planning request naturally.
+
+### Claude Code
+
+Install it for every Claude Code project on this computer:
+
+```sh
+mkdir -p ~/.claude/skills
+ln -s ~/src/bhadrip-skills/meal-prep-agent ~/.claude/skills/meal-prep-agent
+```
+
+For one repository only, link or copy the folder to `.claude/skills/meal-prep-agent` inside that repository and commit it if the whole team should receive it. Claude Code recognizes linked skill folders and watches installed `SKILL.md` files for changes. Invoke it as `/meal-prep-agent`, or ask for one of the workflows in plain language.
+
+### Claude.ai
+
+Claude.ai accepts a ZIP archive of the skill. Build one from the clone:
+
+```sh
+git -C ~/src/bhadrip-skills archive \
+  --format=zip \
+  --prefix=meal-prep-agent/ \
+  --output "$HOME/Downloads/meal-prep-agent.zip" \
+  HEAD:meal-prep-agent
+```
+
+In Claude.ai, open **Customize → Skills**, choose **Create skill**, and upload `meal-prep-agent.zip`. Uploaded skills are copies rather than links to GitHub, so rebuild and upload a fresh ZIP when you want a newer version. Claude.ai can use the workflow and shared cookbook, but its temporary execution environment is not the default home for long-lived household data. Give it an explicitly connected private storage location or download the generated records and provide them again in a later conversation.
+
+## Keep the skill updated
+
+For the recommended linked installation, update the checkout:
+
+```sh
+git -C ~/src/bhadrip-skills pull --ff-only
+```
+
+Both Codex and Claude Code then read the updated skill through the link. Start a new session if an active session does not pick up all changed reference or asset files. For a copied installation, pull the repository and copy the complete `meal-prep-agent` folder over the installed copy again.
+
+The repository currently tracks updates on its default branch. To favor reproducibility over automatic updates, pin the clone to a reviewed commit and move it forward only after checking the changes. Versioned release tags can replace commit pinning once this repository begins publishing releases.
+
+Skill updates affect only the public instructions, schemas, examples, and shared cookbook. Personal recipes, inventory, preferences, feedback, plans, and shopping lists live separately in `~/.meal-prep-agent/`, so replacing or updating the installed skill does not overwrite them.
+
+### Maintainer update checklist
+
+When changing the public skill:
+
+1. Make the change through a pull request and preserve backward compatibility for household JSON where practical.
+2. Update the version in `SKILL.md` metadata and record user-visible changes in [CHANGELOG.md](CHANGELOG.md).
+3. Validate `SKILL.md`, the JSON schemas, local links, and representative prompts before merging.
+4. Publish a GitHub release tag for stable versions. Linked installations may follow the default branch; cautious users can pin a release tag.
+5. Rebuild the Claude.ai ZIP from that tag. Friends using Claude Code or Codex can pull the tag or latest branch directly.
+
+## Why this layout works in both agents
+
+Codex and Claude Code both use the open Agent Skills folder pattern: a `SKILL.md` entry point with optional `references/`, `assets/`, `scripts/`, and agent metadata. This skill keeps portable behavior in `SKILL.md`; Codex-specific presentation metadata in `agents/openai.yaml` is optional and does not prevent Claude from using the core skill.
+
+Useful official examples and documentation:
+
+- [OpenAI: Build skills for Codex](https://developers.openai.com/codex/skills)
+- [OpenAI's current Codex plugin and skill examples](https://github.com/openai/plugins)
+- [Anthropic: Extend Claude with skills](https://code.claude.com/docs/en/skills)
+- [Anthropic's public example-skills repository](https://github.com/anthropics/skills)
+- [Claude Help: upload and manage skills in Claude.ai](https://support.claude.com/en/articles/12512180-use-skills-in-claude)
 
 ## Start with household preferences
 
@@ -27,13 +98,13 @@ make at least half vegan, avoid mushrooms, and keep weekday hands-on work under
 20 minutes. We can prep for 90 minutes on Sunday.
 ```
 
-The skill stores private data in the user's Codex data directory, normally:
+The skill stores private data outside both agent installations, normally:
 
 ```text
-~/.codex/data/meal-prep-agent/
+~/.meal-prep-agent/
 ```
 
-It reports the resolved absolute path before the first write. You can request another private location.
+It reports the resolved absolute path before the first write. You can request another private location. Keeping this separate means Codex and Claude can use the same household records on one computer, and a skill update cannot publish or erase them.
 
 ## Add recipes
 

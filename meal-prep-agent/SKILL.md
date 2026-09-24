@@ -1,6 +1,9 @@
 ---
 name: meal-prep-agent
 description: Manage a persistent household recipe library, import recipes from URLs, create recipe variations, plan quick dinners and weekend prep, maintain freezer inventory, consolidate shopping, guide cooking, and learn from meal feedback. Use for family meal-prep workflows across dietary patterns; do not treat it as clinical nutrition or allergy advice.
+metadata:
+  version: "0.1.0"
+  compatibility: Codex, Claude Code, and Claude.ai; URL imports need web access, and durable household storage needs persistent file access.
 ---
 
 # Meal Prep Agent
@@ -11,7 +14,7 @@ The skill includes a public, read-only starter cookbook at [assets/shared-recipe
 
 ## Resolve storage before writing
 
-Store household data outside this installed skill. Use a location the user provides; otherwise use the user's Codex data directory, normally `~/.codex/data/meal-prep-agent/`, and tell the user the resolved absolute path before the first write. Create only the directories needed for the current operation. If that application-data location is unavailable, use `meal-prep-data/` in the current workspace only after ensuring it is excluded from public version control.
+Store household data outside this installed skill. Use a location the user provides; otherwise use the product-neutral user data directory `~/.meal-prep-agent/`, and tell the user the resolved absolute path before the first write. Create only the directories needed for the current operation. This shared default lets Codex and Claude use the same private household records without putting them inside either agent's installation. If that location is unavailable, use `meal-prep-data/` in the current workspace only after ensuring it is excluded from public version control.
 
 Read [references/storage-model.md](references/storage-model.md) before creating or changing persistent data. Preserve stable IDs and source records. Never overwrite an original recipe to create a variation.
 

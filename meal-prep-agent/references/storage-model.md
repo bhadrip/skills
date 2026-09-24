@@ -6,7 +6,7 @@ The installed skill's `assets/shared-recipes/` cookbook is public, version-contr
 
 ## Default location and layout
 
-Use the user's Codex data directory, normally `~/.codex/data/meal-prep-agent/`, unless the user chooses another location. Resolve and report the absolute path before the first write. This directory is local and is not part of the public `skills` repository. A user who wants sync should choose a separate private repository or another private storage provider; never infer that public GitHub is acceptable for household data.
+Use the product-neutral user data directory `~/.meal-prep-agent/` unless the user chooses another location. Resolve and report the absolute path before the first write. This directory is local, can be shared by Codex and Claude on the same computer, and is not part of the public `skills` repository. A user who wants sync should choose a separate private repository or another private storage provider; never infer that public GitHub is acceptable for household data.
 
 ```text
 meal-prep-agent/
