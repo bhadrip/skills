@@ -1,0 +1,4 @@
+interface:
+  display_name: "Meal Prep Agent"
+  short_description: "Plan, shop, cook, and learn family meals"
+  default_prompt: "Use $meal-prep-agent to manage my household recipe library and plan quick dinners around our preferences."

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/meal-prep/cooked-event.schema.json",
+  "title": "Cooked Meal History Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "event_id", "recorded_at", "status", "meal_title", "recipe_ids"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "event_id": {"type": "string", "minLength": 1},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "cooked_on": {"type": ["string", "null"], "format": "date"},
+    "status": {"enum": ["cooked", "reversed"]},
+    "meal_title": {"type": "string", "minLength": 1},
+    "recipe_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "plan_id": {"type": ["string", "null"]},
+    "option_id": {"type": ["string", "null"]},
+    "servings": {"type": ["number", "null"], "minimum": 0},
+    "leftover_servings_created": {"type": ["number", "null"], "minimum": 0},
+    "reverses_event_id": {"type": ["string", "null"]},
+    "notes": {"type": ["string", "null"]}
+  }
+}

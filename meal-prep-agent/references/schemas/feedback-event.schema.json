@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/meal-prep/feedback-event.schema.json",
+  "title": "Meal Feedback Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "event_id", "recorded_at", "recipe_id", "signals"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "event_id": {"type": "string", "minLength": 1},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "recipe_id": {"type": "string", "minLength": 1},
+    "plan_id": {"type": ["string", "null"]},
+    "rating": {"type": ["integer", "null"], "minimum": 1, "maximum": 5},
+    "repeat": {"enum": ["yes", "yes_with_changes", "no", "unspecified"]},
+    "actual_weekday_assembly_minutes": {"type": ["integer", "null"], "minimum": 0},
+    "signals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["member", "type", "value"],
+        "properties": {
+          "member": {"type": "string"},
+          "type": {"enum": ["taste", "texture", "heat", "effort", "portion", "substitution", "leftovers", "other"]},
+          "value": {"type": "string"}
+        }
+      }
+    },
+    "notes": {"type": ["string", "null"]}
+  }
+}
