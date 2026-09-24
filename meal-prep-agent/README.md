@@ -4,14 +4,38 @@
 
 The skill includes a small [public starter cookbook](assets/shared-recipes/README.md). Your personal recipes and household data stay outside the public repository.
 
-## Start here
+## Start with a 2-minute onboarding
 
-Ask naturally, select the skill with `@` in ChatGPT when Skills are available, invoke `$meal-prep-agent` in Codex, or invoke `/meal-prep-agent` in Claude Code. A good first request is:
+Ask naturally, select the skill with `@` in ChatGPT when Skills are available, invoke `$meal-prep-agent` in Codex, or invoke `/meal-prep-agent` in Claude Code:
 
 ```text
-Help me set up meal prep for my household. Ask only for the preferences that will
-materially change the plan, then show me 10 dinner ideas for next week.
+Help me set up meal prep for my household.
 ```
+
+Before creating a personalized plan, the agent collects seven essentials. You can answer them in one message or conversationally, and it should never ask again for information you already provided.
+
+| Required field | Why it matters | Example |
+| --- | --- | --- |
+| Household and usual servings | Sizes recipes and shopping quantities | `2 adults and 1 child; usually 4 servings` |
+| Hard dietary rules and allergies | Prevents unsuitable suggestions | `Vegetarian; peanut allergy` or `None` |
+| Dinners to plan | Defines the actual week | `5 dinners, Monday through Friday` |
+| Weeknight hands-on limit | Keeps the plan realistic | `20 minutes` |
+| Weekend prep capacity | Decides what can be prepared ahead | `90 minutes on Sunday` or `No weekend prep` |
+| Primary goal | Determines what to optimize first | `Reduce stress`, `waste less food`, `spend less`, or `eat more variety` |
+| Biggest difficulty | Addresses the real failure point | `Decision fatigue`, `produce spoils`, `picky eaters`, `shopping`, or `prep never gets done` |
+
+The agent summarizes the profile for confirmation before saving it. Likes, dislikes, cuisines, spice level, budget, equipment, freezer space, and nutrition preferences are useful but optional; they can be added now or learned gradually.
+
+For example:
+
+```text
+We are two adults and one child and usually want four servings. Plan five dinners.
+Keep them vegetarian, with at least half vegan; no allergies. Weeknights must stay
+under 20 minutes, and we have 90 minutes on Sunday. Our main goal is less evening
+stress. Our biggest problems are decision fatigue and vegetables spoiling.
+```
+
+After confirmation, the first useful result should be at least 10 fitting dinner options—not another long questionnaire. Onboarding is not required for a one-off action such as importing a recipe or asking for cooking help.
 
 ## Some useful things it can do
 
@@ -29,26 +53,6 @@ materially change the plan, then show me 10 dinner ideas for next week.
 | Learn what actually works for the family | `We liked the flavor, the child found it spicy, and it took 10 minutes longer than expected. Remember that without banning the dish.` |
 
 You do not have to use every feature. The skill can help with one recipe, one emergency dinner, or the complete weekly loop: **collect → plan → prep → shop → cook → learn**.
-
-## Start with household preferences
-
-Tell the agent the details that materially affect planning. You can add or revise them over time.
-
-For example, this project's household prefers vegetarian and vegan dinners:
-
-```text
-Use the meal prep agent. We are two adults and one child. Keep dinners vegetarian,
-make at least half vegan, avoid mushrooms, and keep weekday hands-on work under
-20 minutes. We can prep for 90 minutes on Sunday.
-```
-
-The skill keeps private household data separate from its public instructions. In a local Codex or Claude Code installation, the current default is:
-
-```text
-~/.meal-prep-agent/
-```
-
-It reports the resolved absolute path before the first write, and you can request another private location. Hosted ChatGPT and mobile sessions do not use this folder on the phone. They need a user-approved persistent source, such as a connected private drive, or the skill must return portable state files for the user to retain. It must never claim that inventory or feedback was saved when durable storage is unavailable.
 
 ## Add recipes
 
@@ -143,18 +147,21 @@ The raw event is appended to feedback history. Preference learning remains cauti
 
 Cooked history is recorded separately from ratings, so the agent can remember when a meal was last served even when nobody leaves feedback. Corrections are reversible history events rather than silent deletion.
 
-## Public and private recipes
+## Public and private data
 
 - The [shared cookbook](assets/shared-recipes/README.md) is public, version-controlled, and read-only during normal use.
 - Imported recipes, custom variations, feedback, preferences, inventory, plans, and shopping lists stay in private household storage.
 - A shared recipe is copied into the personal library before customization.
 - Publishing a recipe is a separate, explicit operation. Only recipes created for this project or explicitly contributed for publication belong in the public cookbook.
 
+In a local Codex or Claude Code installation, the current private-data default is `~/.meal-prep-agent/`. The agent reports the resolved path before the first write, and the user can choose another private location. Hosted sessions need a user-approved persistent source or must return portable state files; the agent must never claim that onboarding, inventory, or feedback was saved when durable storage is unavailable.
+
 ## Included references
 
 The implementation guidance is split by responsibility:
 
 - [recipe library operations](references/recipe-library.md)
+- [onboarding and household profiles](references/onboarding.md)
 - [planning and shopping](references/planning-and-shopping.md)
 - [cooking and feedback](references/cooking-and-feedback.md)
 - [storage model](references/storage-model.md)

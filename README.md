@@ -4,7 +4,7 @@ Public agent skills maintained by [bhadrip](https://github.com/bhadrip). Product
 
 ## Meal Prep Agent
 
-`meal-prep-agent` manages a persistent household recipe library and the full weekly loop: importing attributed recipes from URLs, creating non-destructive variations, proposing quick dinners, planning weekend prep and freezer reserves, consolidating shopping, guiding cooking, and learning from lightweight feedback. Each family defines its own dietary preferences and constraints.
+`meal-prep-agent` starts with a short household onboarding, then manages the full weekly loop: importing attributed recipes from URLs, creating non-destructive variations, proposing quick dinners, planning weekend prep and freezer reserves, consolidating shopping, guiding cooking, and learning from lightweight feedback. Each family defines its own goals, difficulties, dietary preferences, and constraints.
 
 It keeps recipe, inventory, planning, shopping, cooking, and feedback concerns modular. A public, human-readable starter cookbook provides shared recipes, while personal recipes and household data remain separate. The included reference schemas define portable JSON records while shopper- and cook-facing views remain concise Markdown.
 
