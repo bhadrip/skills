@@ -2,6 +2,21 @@
 
 Public agent skills maintained by [bhadrip](https://github.com/bhadrip). Product compatibility is documented by each skill.
 
+## Portrait to Print plugin
+
+[`portrait-to-print`](plugins/portrait-to-print/README.md) packages a local
+photo-to-3D portrait workflow: multiview generation guidance, bounded agentic
+sculpting, an experiment ledger, fixed-view Blender review, checked STL/GLB
+exports, and printer-specific handoff. It can refine an existing head's nose,
+smile or hairstyle without restarting generation.
+
+The plugin contains **only reusable instructions, code and synthetic tests**—no
+real-person photographs, portrait meshes, renders, facial measurements or
+private project logs. Generation runtimes/weights and Blender are separate local
+dependencies. It does not guarantee likeness or submit printer jobs. See its
+[usage and privacy guide](plugins/portrait-to-print/README.md) and
+[skill entrypoint](plugins/portrait-to-print/skills/portrait-to-print/SKILL.md).
+
 ## Meal Prep Agent
 
 `meal-prep-agent` starts with a short household onboarding, then manages the full weekly loop: importing attributed recipes from URLs, creating non-destructive variations, proposing quick dinners, planning weekend prep and freezer reserves, consolidating shopping, guiding cooking, and learning from lightweight feedback. Each family defines its own goals, difficulties, dietary preferences, and constraints.

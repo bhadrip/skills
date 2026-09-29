@@ -1,0 +1,5 @@
+numpy>=1.24,<3
+trimesh>=4.4,<5
+scipy>=1.10,<2
+# Optional: pymeshlab for --intersections; not needed for the basic helpers.
+# Blender and an image-to-3D backend are separately installed applications.

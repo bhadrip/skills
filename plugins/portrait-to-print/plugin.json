@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "portrait-to-print",
+  "version": "0.1.0",
+  "description": "A private-by-default local photo-to-3D portrait workflow with bounded sculpting experiments and validated print exports.",
+  "author": {
+    "name": "bhadrip",
+    "url": "https://github.com/bhadrip"
+  },
+  "repository": "https://github.com/bhadrip/skills",
+  "license": "MIT",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Portrait to Print",
+        "shortDescription": "Local photo-to-portrait sculpting and print checks",
+        "longDescription": "Turn existing photographs into a locally generated and iteratively sculpted portrait, with private workspaces, an experiment ledger, repeatable Blender reviews, mesh validation, and printer-specific handoff. Requires a separately installed local generation backend; no model weights or portrait data are bundled.",
+        "developerName": "bhadrip",
+        "category": "Productivity",
+        "capabilities": [
+          "Interactive",
+          "Write"
+        ],
+        "defaultPrompt": [
+          "Use my existing photos to make a locally sculpted printable portrait.",
+          "Refine this portrait mesh and record what improves or fails.",
+          "Prepare a reviewed portrait for my printer without sending a print job."
+        ]
+      }
+    }
+  }
+}

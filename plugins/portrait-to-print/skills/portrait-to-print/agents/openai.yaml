@@ -1,0 +1,4 @@
+interface:
+  display_name: "Portrait to Print"
+  short_description: "Local portrait sculpting with evidence and print checks"
+  default_prompt: "Use $portrait-to-print to refine my existing photos or mesh into a printable portrait, keeping all personal data local."
