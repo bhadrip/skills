@@ -1,0 +1,4 @@
+interface:
+  display_name: "Company Diligence"
+  short_description: "Evidence-led technical and financial company diligence"
+  default_prompt: "Use $company-diligence to investigate a company across product, engineering, security, embedded/hardware, UX, GTM, team and finance, then deliver an evidence-backed local report."

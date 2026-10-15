@@ -2,6 +2,19 @@
 
 Public agent skills maintained by [bhadrip](https://github.com/bhadrip). Product compatibility is documented by each skill.
 
+## Company Diligence
+
+[`company-diligence`](company-diligence/SKILL.md) investigates a company for an
+employment, investment-research, partnership or vendor decision across product,
+engineering, security, embedded/hardware, UX, GTM, team and finance. It combines
+primary-source research with bounded local failure experiments, market and cash
+sensitivities, independent review, and a traceable local HTML report.
+
+The skill includes modular investigation references and a standard-library
+evidence validator. Company-specific research stays outside the skill. Invoke
+it as `$company-diligence` after installing the folder in your skills directory;
+provide company/product/repository links and the decision you need to make.
+
 ## Portrait to Print plugin
 
 [`portrait-to-print`](plugins/portrait-to-print/README.md) packages a local
