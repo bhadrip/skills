@@ -92,8 +92,10 @@ This method is not a portal-limit exemption.
 ## Interpret outcomes and finish
 
 - Explicit no-slots response: record the location and response time.
-- PSE0501: end the calendar pass and follow configured technical backoff. It
-  proves neither no slots nor an expired login or account ban.
+- PSE0501: record the calendar failure and follow the task's continuation and
+  backoff policy. If authorized to finish all locations, continue to each
+  remaining location once without retrying the failed request. It proves
+  neither no slots nor an expired login or account ban.
 - Generic busy / PSE0504: record the exact visible result and unknown cause.
   Retry only when current task policy permits bounded retries.
 - Selected time no longer available: stop retrying that stale row.

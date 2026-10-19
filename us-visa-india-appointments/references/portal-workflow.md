@@ -95,7 +95,7 @@ For Cloudflare:
 | Visible outcome | Meaning and response |
 | --- | --- |
 | No Slots Available | Location-specific result after the current request completes. |
-| PSE0501 | Calendar retrieval failed: end pass and apply configured technical backoff. Not proof of no slots, ban, or expiry. |
+| PSE0501 | Calendar retrieval failed: follow the task's continuation/backoff policy. An authorized all-location pass can continue to remaining locations once. Not proof of no slots, ban, or expiry. |
 | Generic processing-too-many-requests message | Booking rejected/busy; cause and HTTP status remain unknown from this alone. |
 | PSE0504 | Booking failed; no specific HTTP status or account/authentication cause is established. |
 | Selected time no longer available | Stop retrying that stale row; require a valid newly offered alternative. |
@@ -108,6 +108,12 @@ ban by itself. Follow current bounded retry authority. Read/dismiss a known
 ordinary error alert; do not treat an unknown confirmation or binding agreement
 as an alert. An error's instruction to contact support does not authorize
 sending a message.
+
+When the user authorizes completing all locations despite ordinary calendar
+errors, record and dismiss each known error and continue sequentially without
+repeating the failed location. Evaluate configured between-pass technical
+backoff after that bounded pass finishes. Fresh confirmation holds and actual
+access restrictions still stop work.
 
 Record submission start before clicking: the click may finish even if the next
 snapshot fails. Fills can also finish before a detached-operation error.
