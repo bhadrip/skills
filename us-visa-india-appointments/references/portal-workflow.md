@@ -47,11 +47,14 @@ failures, and flows without credential entry. Record a stable flow ID when
 first observed. Credentials/security completion for that same flow is not
 another flow. A Cloudflare page alone is not a credential login.
 
-Apply the task's configured rolling flow budget before deliberately starting a
-new flow. Label a self-imposed ceiling as local policy, not a verified portal
+Apply a rolling flow budget only when current task policy explicitly configures
+one. Label a self-imposed ceiling as local policy, not a verified portal
 allowance. A general warning that attempts are limited establishes no numeric
-allowance. A current explicit exception is scoped to that action/run; completing
-its admitted flow does not authorize another flow.
+allowance. If the user revises a local ceiling, update active rules and scheduled
+instructions; preserve old counts and exceptions as history, not current holds.
+A current explicit exception is scoped to that action/run; completing its
+admitted flow does not authorize another flow. Without a numeric budget, follow
+the authorized bounded sign-in policy; do not create a login retry loop.
 
 For an authorized login:
 

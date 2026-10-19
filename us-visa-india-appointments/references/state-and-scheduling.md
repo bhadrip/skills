@@ -20,7 +20,7 @@ Adapt to existing schemas rather than erasing/migrating evidence.
 | Schedule | Requested targets/time zone, limits, spacing, and backoff. A target minute is not proof of a portal release time. |
 | Active run | Stable ID, original target, actual active-work intervals, requests/submissions started and completed, cap, resume point. |
 | Pending decision | Specific action, status, hostname, tab/evidence reference, observation time, and approval consumption. |
-| Authentication | Flow events; credential submissions separately; verified completion; local rolling budget; scoped exceptions. |
+| Authentication | Flow events; credential submissions separately; verified completion; optional explicit local rolling budget; scoped exceptions. |
 | Holds | Cause/message, start/expiry, source (site versus local), and whether browser work is prohibited. |
 | Inventory | Location/date/time and original response timestamp; current versus cached/historical. |
 | Booking | Selected versus reserved/confirmed stage; both final appointments and proof only after confirmation. |
@@ -55,6 +55,25 @@ Historical consecutive errors and current timed backoff are distinct. A
 successful server-backed calendar/time/no-slots response resets the calendar
 error streak. Cloudflare alone neither increments it nor starts backoff.
 Separate calendar, booking, and authentication errors.
+
+## Limits and evidence
+
+Keep three different claims separate: a documented portal restriction, an
+observed count, and a local pacing or admission rule. Never turn the largest
+observed count into a guaranteed allowance or an upper limit. Successful logins
+beyond a proposed threshold contradict treating that threshold as universal;
+they do not establish the portal's reset window, risk policy, or future behavior.
+
+For a rolling-window observation, use precisely timestamped events and disclose
+uncertain events excluded from the calculation. Count successful completions,
+credential submissions, and sign-in flows separately. Callback failures are not
+proof of credential rejection or a numeric account limit. Generic booking busy
+responses alone do not identify whether account, session, IP, or backend load
+caused them. Do not provoke a restriction to measure a ceiling.
+
+When the user revises a local limit, update canonical policy, active hold fields,
+and the recurring prompt consistently. Keep prior policy in history. A removed
+numeric gate must not continue blocking runs through a stale eligibility date.
 
 ## Offline date/budget helper
 

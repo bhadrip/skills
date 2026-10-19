@@ -27,7 +27,7 @@ progress. Establish:
   instructions when these are not already established.
 - Existing receipt/payment authority and treatment of unexpected appointments.
 - User-requested schedule, bounded request/submission limits, spacing,
-  technical-error backoff, and a separately identified local login-flow budget.
+  technical-error backoff, and any explicitly configured local login-flow budget.
 
 Do not import another task's dates, city preference, retry exception, schedule,
 login ceiling, credential path, or booking consent. A named-city manual request
@@ -52,6 +52,8 @@ resuming, or updating monitoring state. Evaluate holds before browser work:
 
 Use current explicit instructions over historical consumed approvals. Permission
 for one current action or batch does not become standing authority.
+Do not invent a numeric login allowance or preserve a superseded local ceiling.
+Record observed counts separately from current policy and unknown portal limits.
 
 ## Perform one bounded pass
 
