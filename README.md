@@ -15,6 +15,19 @@ evidence validator. Company-specific research stays outside the skill. Invoke
 it as `$company-diligence` after installing the folder in your skills directory;
 provide company/product/repository links and the decision you need to make.
 
+## U.S. Visa Appointments in India
+
+[`us-visa-india-appointments`](us-visa-india-appointments/SKILL.md) supports
+authorized OFC/VAC and consular searches on the official portal: private task
+state, fresh inventory, sequential browser controls, bounded retries, login
+accounting, confirmation holds, and complete appointment-pair verification.
+
+The package contains reusable instructions and an offline calendar-date/login
+budget calculator with synthetic tests. Applicant information, credentials,
+screenshots, live schedules, and session histories stay outside the repository.
+Install the folder in your skills directory and invoke it as
+`$us-visa-india-appointments` with your private task configuration.
+
 ## Portrait to Print plugin
 
 [`portrait-to-print`](plugins/portrait-to-print/README.md) packages a local

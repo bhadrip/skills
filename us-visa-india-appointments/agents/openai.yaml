@@ -1,0 +1,4 @@
+interface:
+  display_name: "U.S. Visa Appointments in India"
+  short_description: "Bounded visa appointment checks with private task state"
+  default_prompt: "Use $us-visa-india-appointments to check official portal availability and book a qualifying OFC and consular pair within my authorized constraints."
