@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write in My Style"
+  short_description: "Learn and apply your writing style from examples"
+  default_prompt: "Use $write-in-my-style to draft this message in my voice using my examples, and ask for a sample if you need one."

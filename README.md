@@ -2,6 +2,20 @@
 
 Public agent skills maintained by [bhadrip](https://github.com/bhadrip). Product compatibility is documented by each skill.
 
+## Write in My Style
+
+[`write-in-my-style`](write-in-my-style/SKILL.md) learns a writing voice from
+examples and confirmed preferences. It drafts Slack messages, WhatsApp texts,
+and emails using evidence for the relevant audience and channel. When a style
+choice is unclear, it asks for a comparable example or one line in the user's
+own words.
+
+Copy the skill folder into your Codex skills directory and invoke
+`$write-in-my-style`. An optional [encrypted local profile](write-in-my-style/references/local-profile.md)
+stores only predefined style traits. It uses uv and the operating system's
+credential store. The package includes reusable instructions and fictional
+examples.
+
 ## Company Diligence
 
 [`company-diligence`](company-diligence/SKILL.md) investigates a company for an
