@@ -6,9 +6,9 @@ Public agent skills maintained by [bhadrip](https://github.com/bhadrip). Product
 
 [`write-in-my-style`](write-in-my-style/SKILL.md) learns a writing voice from
 examples and confirmed preferences. It drafts Slack messages, WhatsApp texts,
-and emails using evidence for the relevant audience and channel. When a style
-choice is unclear, it asks for a comparable example or one line in the user's
-own words.
+and emails using evidence for the relevant audience and channel. A
+[coverage map and draft citations](write-in-my-style/references/coverage-and-citations.md)
+show which examples to add and which style observations shaped the message.
 
 Copy the skill folder into your Codex skills directory and invoke
 `$write-in-my-style`. An optional [encrypted local profile](write-in-my-style/references/local-profile.md)

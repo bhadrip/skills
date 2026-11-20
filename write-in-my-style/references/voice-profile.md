@@ -10,7 +10,7 @@ A style rule has **scope + situation that triggers it + observable choice + evid
 | --- | --- | --- |
 | Confirmed | The user stated or confirmed the rule and its scope | Apply within that scope |
 | Observed | The same choice recurs in independent examples in comparable settings | Apply as a tendency within the observed scope |
-| Tentative | One example, mixed evidence, or scope that needs checking | Ask when it would affect the draft. Match an example for the current draft when the user chooses it as a model |
+| Tentative | One example or a scope that needs checking | Ask when it would affect the draft. Match an example for the current draft when the user chooses it as a model |
 | Unknown | No applicable evidence | Leave the rule unset. Ask when the draft depends on it |
 
 During calibration, use short labels to track which session examples or instructions support a rule. For long-term use, translate supported tendencies into the predefined labels in [local profile storage](local-profile.md). Persist only the generic scope, observed or confirmed status, feature, and choice. Omit a trait when there is no suitable label. Keep exact wording and evidence references transient, and use new fictional scenarios to illustrate the resulting style.

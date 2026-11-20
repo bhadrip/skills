@@ -14,6 +14,7 @@ import sys
 
 from cryptography.fernet import Fernet, InvalidToken
 
+import profile_coverage
 import profile_schema
 
 
@@ -158,7 +159,14 @@ def read_update(stream):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("schema", "read", "save"))
+    commands = parser.add_subparsers(dest="command", required=True)
+    commands.add_parser("schema", help="show the allowed style labels")
+    commands.add_parser("read", help="read the saved profile")
+    commands.add_parser("save", help="save a style-only profile from standard input")
+    coverage = commands.add_parser("coverage", help="compare style evidence for specific situations")
+    coverage.add_argument("--scope", nargs=3, action="append", required=True, metavar=("CHANNEL", "AUDIENCE", "PURPOSE"))
+    coverage.add_argument("--feature", action="append", choices=profile_schema.CHOICES)
+    coverage.add_argument("--format", choices=("json", "markdown"), default="json")
     args = parser.parse_args()
     path = Path.home() / ".write-in-my-style" / "profile.sqlite3"
 
@@ -167,6 +175,17 @@ def main():
             result = profile_schema.schema()
         elif args.command == "read":
             result = read_profile(path)
+        elif args.command == "coverage":
+            try:
+                scopes = [profile_coverage.validate_scope(values) for values in args.scope]
+            except ValueError as error:
+                raise ProfileError(str(error)) from None
+            features = args.feature or profile_schema.CHOICES
+            report = profile_coverage.build_report(read_profile(path), scopes, features)
+            if args.format == "markdown":
+                print(profile_coverage.format_markdown(report))
+                return 0
+            result = report
         else:
             revision, profile = read_update(sys.stdin)
             result = save_profile(path, profile, revision)

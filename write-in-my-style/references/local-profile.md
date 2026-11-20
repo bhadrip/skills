@@ -42,3 +42,15 @@ The following payload illustrates a first save with a fictional observation.
 ```
 
 On a revision conflict, read again and apply the intended changes to the latest profile. On a credential or authentication failure, preserve the saved file and report the failure. Persistent storage requires the encrypted helper. An encrypted backup requires its matching credential-store key.
+
+## Inspect coverage and rule sources
+
+Pass a concrete channel, audience, and purpose for each column. Repeat `--scope` to compare situations. Repeat `--feature` to limit rows.
+
+```sh
+uv run --script scripts/profile_store.py coverage \
+  --scope slack teammate request --scope email new_client request \
+  --feature message_order --feature request_form --format markdown
+```
+
+JSON is the default format. It includes each feature's coverage status, applicable choice if resolved, and the saved rule IDs and labels that support it. Equally specific rules with different choices appear together as a conflict. An empty store produces a map with gaps. The command reads the latest saved revision and writes the report only to standard output. See [coverage and citations](coverage-and-citations.md) to incorporate evidence from the current session.

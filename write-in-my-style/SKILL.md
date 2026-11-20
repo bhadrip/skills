@@ -1,6 +1,6 @@
 ---
 name: write-in-my-style
-description: Learn a user's writing voice from their examples and confirmed preferences, then draft or rewrite messages in that voice. Use when they ask for their own style, want to calibrate or update a voice profile, or supply samples to match in Slack, WhatsApp, email, and similar messages.
+description: Learn a user's writing voice, show coverage gaps, and draft messages with evidence for the style choices. Use for voice calibration, style profile updates, or writing in the user's style on Slack, WhatsApp, email, and similar channels.
 ---
 
 # Write in My Style
@@ -13,13 +13,14 @@ description: Learn a user's writing voice from their examples and confirmed pref
 - Describe choices in observable terms. Use newly written fictional examples to demonstrate style. Capture the order of ideas and placement of the ask as well as word choice, grammar, tone, and formatting. Read [the voice profile reference](references/voice-profile.md) to calibrate or update a profile.
 - Scope every inference to the evidence. One sample can be matched for the current draft if the user designates it as a model. A broader rule needs repeated independent examples or confirmation. Keep unobserved features unknown. Treat the user's instructions to the assistant as a distinct context from the messages they send other people.
 - When a style choice affects the draft and the evidence leaves it open, ask for one comparable example or ask the person to write an actual line for the scenario. Ask a factual question if the brief itself is missing a detail that matters. If the user asks you to proceed with limited evidence, apply the supported choices and label the draft as provisional outside the message.
+- Show a coverage map when the user asks what the skill has learned, which examples it needs, or for a calibration checkpoint. Use the matrix and next-example guidance in [coverage and citations](references/coverage-and-citations.md).
 
 ## Draft for the situation
 
-1. Use the evidence already available in the conversation. When a saved English profile would help, read it using [local profile storage](references/local-profile.md). Honor the user's instructions for this message first. Use narrower applicable rules ahead of broad defaults. Ask if equally relevant rules conflict in a way that matters. Apply a cross-channel or cross-language pattern when the user has confirmed it or the evidence covers the target context.
+1. Use the evidence already available in the conversation. When a saved English profile would help, use one snapshot for the style choices and the citations. Prefer the JSON coverage report for a situation the [local profile schema](references/local-profile.md) supports. Honor the user's instructions for this message first. Use narrower applicable rules ahead of broad defaults. Ask if equally relevant rules conflict in a way that matters. Apply a cross-channel or cross-language pattern when the user has confirmed it or the evidence covers the target context.
 2. Build the message around the user's facts, intent, and level of commitment. Decide where the ask or main idea belongs, how much context to include, and how to close using the applicable evidence. Match sentence shape, diction, rhythm, and presentation. Use recurring phrases where they naturally fit. Preserve the user's deliberate fragments or informality.
 3. Check each substantive claim, commitment, date, recipient, and requested action against the brief. Use examples for style only. Keep optional greetings, pleasantries, emoji, and sign-offs when the brief or evidence calls for them. Check that conspicuous voice choices are traceable to the user. Keep any calibration questions or provisional status outside the copy-ready text.
-4. Return the draft when ready. Sending, posting, or replying externally requires explicit authorization.
+4. Return the copy-ready draft followed by a brief **Why this wording** section. Tie each meaningful style choice to the applicable saved rule, session observation, or instruction in the brief. Use [coverage and citations](references/coverage-and-citations.md) for the citation format and how to handle gaps. Sending, posting, or replying externally requires explicit authorization.
 
 ## Carry the profile forward
 
